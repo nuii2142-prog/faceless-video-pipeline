@@ -1,0 +1,5 @@
+Read AGENTS.md first — it is the universal entry point for this repo.
+Then read docs/WORKFLOW.md (the video pipeline) and docs/visual-style.md (the locked image style).
+Your two jobs: write the narration script, and write one image prompt per scene into
+output/<slug>/scene_prompts.json. Everything else is plain Python scripts in scripts/.
+Never commit secrets — .env holds the API key and is gitignored (.env.example is the template).
