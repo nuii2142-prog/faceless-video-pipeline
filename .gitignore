@@ -1,0 +1,25 @@
+# ── secrets — NEVER commit ─────────────────────────────
+.env
+*.key
+
+# ── python env / cache ─────────────────────────────────
+ml-env/
+__pycache__/
+*.pyc
+
+# ── local tools, models, scratch ───────────────────────
+voicebox/
+LOGO/
+test_output/
+data/
+
+# ── media: large and/or copyrighted (keep TEXT artifacts only) ──
+*.mp3
+*.wav
+*.mp4
+SFX/
+output/**/frames/
+output/**/frames_*/
+output/**/*.png
+
+# (showcase/ images are intentionally NOT ignored — curated portfolio shots)
