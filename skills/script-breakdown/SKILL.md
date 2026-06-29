@@ -74,6 +74,33 @@ Nuay-life illustration → one memorable line) → close (reframe + 3-beat recap
 Personal experience = the heart; the researched stat(s) = the authority. Short declarative sentences,
 second person where it fits, present tense, calm/awe-building, no emojis.
 
+## A4b — Kill the AI tells (genre-tuned anti-slop)
+A script that reads like ChatGPT is what gets a faceless channel dismissed as "AI slop"
+and hurts both retention and monetization review. But the Zen format *wants* some
+heightening — do not strip it flat. Cut the tells, keep the voice.
+
+**REMOVE always:**
+- **Em dashes (—).** They leak into the .srt captions. Use a period or "and".
+- **Throat-clearing openers:** "Here's the number that…", "Here's the thing", "The truth is",
+  "What's fascinating is". Cut straight to the fact.
+- **Intensifiers / adverbs:** very, really, simply, truly, incredibly, just. Delete — let the
+  noun and verb carry the weight ("hard to count" > "very hard to count").
+- **Inanimate agency:** "the data tells us", "the decision emerges". Name who acts.
+
+**USE SPARINGLY — max ONCE per script each (potent, but formulaic in bulk):**
+- "Not X. It's Y." contrast.
+- Negative listing ("Not a paycheck. Not on time.").
+- Three-fragment staccato ("The land is aging. The children left. So who grows it?").
+- A pull-quote closing line.
+
+**KEEP — this is the Zen voice, not slop:**
+- One rhetorical-question pivot per section.
+- One anaphora triad for rhythm ("We told them… We told them… We never told them…").
+- The closing callback to the opening image.
+
+**Final check:** read the draft out loud. If a line sounds like a LinkedIn post, rewrite it
+as something Nuay would actually say standing in a field at 5am.
+
 ## A5 — Length check
 Count words. short: warn if <170 or >260. long: warn if <1000 or >1600.
 est_duration_sec = round(words / 2.5). Show the warning and wait if triggered.
@@ -109,8 +136,12 @@ Real source(s): <citation(s)>
 ## A9 — Hand off and STOP
 ```
 ✅ Saved: output/<slug>/script.txt, script.json
-Next (you): record yourself reading script.txt (VoiceBox / Google AI Studio) → drop the audio
-file (.mp3/.wav) into output/<slug>/. Then tell me and I'll run Phase B (timestamps → scenes → image prompts).
+Next (you): record script.txt IN YOUR OWN VOICE (a calm, slow read — your accent is the brand,
+not a flaw). Drop the .mp3/.wav into output/<slug>/, then tell me and I'll run Phase B.
+> Why your real voice: it is the one asset no competitor can clone, the strongest authenticity
+> signal for YouTube's anti-"inauthentic content" review, and it removes the synthetic-media
+> disclosure question. AI TTS (VoiceBox / Google AI Studio) only as a stopgap while you build
+> the habit — and if you do use it, tick YouTube's altered-content disclosure on upload.
 ```
 Then **stop**. Do not run Whisper, do not invent scenes, do not generate images. If you have a genuinely
 useful idea (a stronger hook, a better stat, a thumbnail/title angle), offer it briefly. Ask if anything
@@ -149,6 +180,22 @@ Show Nuay the scene list (or a summary) so he can sanity-check the segmentation 
 ```json
 [{ "scene": 1, "phrase": "...", "shot_type": "B-ROLL|CHARACTER|ATMOSPHERE", "visual": "..." }]
 ```
+> **Faithfulness on numbers:** when a phrase states a statistic, make its scene a clean
+> B-ROLL number/chart card ("58", "40%", a simple pie) so the viewer *sees* the fact and the
+> authority beat lands. (z-turbo renders digits imperfectly — overlay the number in post if needed.)
+> **Watch pacing:** a single still held >~8s drags. If a phrase runs that long, add a second
+> visual element or have Nuay read it with a cut. (Future upgrade: a slow Ken Burns push-in in
+> assembly would soften static holds globally.)
+
+## B2c — Breathing room (intro / outro) — automatic in assembly
+These come from `assemble_clip.py`; do NOT time them in scenes.json:
+- **Lead-in ~1s** — frame 1 shows before the voice starts (the viewer settles in).
+- **Outro ~2.5s** — a final frame holds in silence after the voice ends (let it land).
+- **Fade** — gentle fade in from black at the start, fade out to black at the end.
+Optionally author ONE dedicated **outro visual** (a calm resolution image — e.g. the figure
+looking at the horizon, lots of empty space) and save it as `frames/scene_end.png`; assembly
+holds THAT through the outro instead of freezing the last narration frame. Tune per clip with
+`--lead-in` / `--outro`.
 
 ## B3 — Captions + images + assembly
 - **Captions (sidecar, do NOT burn in):** `python scripts/make_srt.py <slug>` → `output/<slug>/<slug>.srt`.
@@ -168,3 +215,17 @@ then          → python scripts/assemble_clip.py <slug> [--landscape]
 - **Voice:** Nuay's own (VoiceBox / Google AI Studio) — free.
 - **Timestamps + segmentation + image prompts + assembly** (Phase B): **Sonnet** + local tools — cheap/free.
 - **Images:** local ComfyUI on the RTX 5070 (free). ~30-50 imgs (short), ~70-90 (long). ~19-35s/img.
+
+---
+
+## Monetization guardrails (keep the channel eligible)
+YouTube de-monetizes faceless channels under its **"inauthentic / repetitious content"** policy,
+not for using AI. This project's defense is real: a real person's life + real, cited stats. Protect it.
+- **Voice = Nuay's own** (see A9). The single biggest authenticity signal and the hardest thing to copy.
+- **Music = cleared only.** YouTube Audio Library or owned tracks. A Content-ID claim on a random
+  track (e.g. "Way Back Home") diverts the ad revenue or blocks the video — verify before every upload.
+- **No mass-production look.** One genuine point of view per video. Never re-skin the same script with
+  a new topic; vary the hook and structure. Quantity-farming is exactly what the policy targets.
+- **Stats stay REAL and cited** (enforced in A3). One fabricated number that gets caught kills trust.
+- **YPP bar to aim for:** 1,000 subscribers + 4,000 public watch-hours/12mo (long-form) OR 10M Shorts
+  views/90 days. Long-form watch-hours are the realistic path here — which is why long-form is the north star.
