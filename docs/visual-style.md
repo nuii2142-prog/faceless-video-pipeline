@@ -57,20 +57,25 @@ Wire into the workflow's negative-text node when using a cfg>1 model.
 
 ---
 
-## Shot types (set per scene in `scene_prompts.json`)
+## Shot types (set per beat in `scene_prompts.json`)
 
 - **CHARACTER** — the figure does the one action the caption names. Gets `CHARACTER_STYLE`. Use "the character".
 - **B-ROLL** — an object / icon / chart / a short NUMBER (e.g. `58`, `40%`). No person → no `CHARACTER_STYLE`.
 - **ATMOSPHERE** — a place / landscape. Pure place = "no people"; a person-in-the-scene = "one small figure" (stays generic, not the full spec, since it is small/distant).
 
-Keep each visual to ONE or TWO simple elements. Do NOT make the model render words/sentences (it garbles
-them) — only a short standalone number when the caption is a statistic. Symbols (`?`, `=`, `X`, `%`, arrow) render fine.
+There are NO quotas — the mix emerges from what each line means (the method lives in
+`skills/script-breakdown/SKILL.md` B3). Keep each visual to ONE clear idea, staged as simply as it
+can be while still telling the story; BASE_STYLE already invites a few small supporting details, so
+a real scene is welcome — "two tiny icons side by side" is a last resort, not a default.
+Do NOT make the model render words/sentences (it garbles them) — only a short standalone number
+when the caption is a statistic. Symbols (`?`, `=`, `X`, `%`, arrow) render fine.
 
 ---
 
 ## Aspect ratio
-- **16:9** long-form (the ResolutionSelector / latent node in the workflow already sets this).
-- **9:16** for vertical Shorts — switch the workflow's width/height if making a Short.
+- **16:9** long-form (the latent node in the workflow already sets this).
+- **9:16** vertical Shorts — `python scripts/batch_zturbo.py <slug> --portrait` flips BOTH the
+  latent resolution and the aspect line inside BASE_STYLE (no manual edits).
 
 ## Known model quirks (z-turbo, cfg 1)
 - Negatives are inert → rely on the split style + positive wording to keep scenes clean.

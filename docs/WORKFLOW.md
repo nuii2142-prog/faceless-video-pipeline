@@ -8,8 +8,8 @@ finished 16:9 YouTube video in the thin-line doodle style.
 ## 0. The big picture
 
 ```
-TOPIC ──(Opus)──> SCRIPT ──(you record)──> VOICE ──(Whisper)──> SCENES
-   └─(Claude)─> IMAGE PROMPTS ─(z-turbo)─> 62 IMAGES ─(FFmpeg)─> VIDEO + SUBTITLES + SEO
+TOPIC ──(Opus)──> SCRIPT ──(you record)──> VOICE ──(Whisper)──> PHRASES (captions)
+   └─(Claude)─> VISUAL BEATS + IMAGE PROMPTS ─(z-turbo)─> ~120 IMAGES ─(FFmpeg)─> VIDEO + SUBTITLES + SEO
 ```
 
 Two phases, split by the audio:
@@ -32,9 +32,11 @@ Everything heavy (images, voice) runs **locally / free**. Claude is only the orc
 └─ output/<slug>/      ← one folder per video
      ├─ script.txt / script.json     (Phase A)
      ├─ <audio>.mp3                   (you drop this in)
-     ├─ words.json / scenes.json      (Whisper)
-     ├─ scene_prompts.json            (image prompts, 1 per scene)
+     ├─ words.json / scenes.json      (Whisper; phrases = caption cues)
+     ├─ scene_prompts.json            (image prompts, 1 per BEAT — "covers" groups phrases)
+     ├─ corrections.json              (Whisper mishears → caption fixes, per project)
      ├─ frames/scene_NN.png           (generated images)
+     ├─ contact_sheet.png             (all frames tiled, for the human pass)
      ├─ <slug>.srt                    (subtitles)
      └─ final.mp4
 ```
@@ -63,31 +65,45 @@ ml-env\Scripts\python.exe scripts\whisper_phrases.py "output\<slug>\<audio>.mp3"
 ```
 → writes `words.json` + `scenes.json` (phrases come from the real audio, not a guess).
 
-**3.2 Image prompts:** Claude writes `output/<slug>/scene_prompts.json` — one entry per scene:
-`{"scene": N, "phrase": "...", "shot_type": "CHARACTER|B-ROLL|ATMOSPHERE", "visual": "..."}`
-(See `docs/visual-style.md` for the rules. Style is auto-appended; don't put style in `visual`.)
+**3.2 Visual beats + image prompts:** Claude groups the phrases into visual beats (3-6s each,
+~half the phrase count) and writes `output/<slug>/scene_prompts.json` — one entry per BEAT:
+`{"scene": N, "covers": [N, N+1], "phrase": "...", "shot_type": "CHARACTER|B-ROLL|ATMOSPHERE", "visual": "..."}`
+- The method (meaning-first devices, anti-icon-slop, motif planning, the human check before
+  generating) lives in `skills/script-breakdown/SKILL.md` B2-B3b. Style rules: `docs/visual-style.md`.
+- Style is auto-appended; don't put style in `visual`. Whisper mishears go into `corrections.json`.
 
-**3.3 Generate images (z-image-turbo, ~27 min for 62):**
+**3.3 Generate images (z-image-turbo, ~26 s/img → ~1h for a long clip):**
 ```
 python scripts\batch_zturbo.py <slug>
 ```
-- Skips existing frames (resumable). Fixed seed 42 for consistency.
+- Skips existing frames (resumable), prints a running ETA. Fixed seed 42 for consistency.
+- 9:16 Short: add `--portrait` (flips the latent AND the style aspect line together).
 - Re-roll one bad scene: `python scripts\batch_zturbo.py <slug> --only 43 --seed 7`
   (delete `frames\scene_43.png` first, or it skips it).
 - A/B a style change without touching the real frames: `--tag test` → writes to `frames_test/`.
+
+**3.35 Human pass (cheap insurance before assembly):**
+```
+ml-env\Scripts\python.exe scripts\contact_sheet.py <slug>
+```
+→ `output/<slug>/contact_sheet.png` — every frame tiled with its scene number. Eyeball it,
+re-roll the misses with `--only`.
 
 **3.4 Subtitles:**
 ```
 python scripts\make_srt.py <slug>
 ```
-→ `output/<slug>/<slug>.srt` (upload separately to YouTube; not burned in).
+→ `output/<slug>/<slug>.srt` (upload separately to YouTube; not burned in). Applies
+`corrections.json` (per-project Whisper fixes) + a few generic spacing tidy-ups.
 
 **3.5 Assemble:**
 ```
-ml-env\Scripts\python.exe scripts\assemble_clip.py <slug> --landscape --music "SFX\<track>.mp3"
+python scripts\assemble_clip.py <slug> --landscape --ken-burns --music "SFX\<track>.mp3"
 ```
 - `--landscape` = 1920×1080 (drop it for 9:16 Shorts).
-- `--music` = optional; loops + mixes under the voice at 12% (edit `MUSIC_VOL` in the script to change).
+- `--ken-burns` = slow breathing zoom on every beat; renders in parallel (`--jobs`, default ~6),
+  a long clip finishes in minutes.
+- `--music` = optional; loops + mixes under the voice (`--music-vol`, default 12%).
 
 ---
 
@@ -126,10 +142,11 @@ Workflow files + node maps are in `scripts/model_test.py`. To compare models aga
 
 # Phase B (after you drop the audio in output/<slug>/)
 ml-env\Scripts\python.exe scripts\whisper_phrases.py "output\<slug>\<audio>.mp3" <slug>
-#   (Claude writes scene_prompts.json)
+#   (Claude groups beats + writes scene_prompts.json + corrections.json, shows you the plan)
 python scripts\batch_zturbo.py <slug>
+ml-env\Scripts\python.exe scripts\contact_sheet.py <slug>    # eyeball all frames
 python scripts\make_srt.py <slug>
-ml-env\Scripts\python.exe scripts\assemble_clip.py <slug> --landscape --music "SFX\<track>.mp3"
+python scripts\assemble_clip.py <slug> --landscape --ken-burns --music "SFX\<track>.mp3"
 
 # Re-roll one scene
 python scripts\batch_zturbo.py <slug> --only <N> --seed <new>

@@ -11,19 +11,22 @@ and other agents read a root `AGENTS.md` (or you can point them here). Start by 
 A faceless YouTube video pipeline ("Soil & Signal"): a topic becomes a thin-line stickman
 doodle explainer video. Heavy work runs locally/free (ComfyUI for images, Whisper for
 timing, FFmpeg for assembly, your own TTS for voice). An LLM is only needed for two steps:
-writing the narration, and writing one image prompt per scene.
+writing the narration, and turning phrases into visual beats with one image prompt each.
 
 ## The two LLM jobs (this is what an agent does here)
 - **Write the script** (Phase A): follow `skills/script-breakdown/SKILL.md`. Output a flowing
   English narration in the Zen format with ONE real, verified statistic. Then STOP — the human
   records the voice.
-- **Write image prompts** (Phase B): after Whisper produces `scenes.json`, write
-  `output/<slug>/scene_prompts.json` — one `{scene, phrase, shot_type, visual}` per scene,
-  following `docs/visual-style.md`. Do NOT bake style into `visual`; the scripts append it.
+- **Beats + image prompts** (Phase B): after Whisper produces `scenes.json`, group consecutive
+  phrases into visual beats (3-6s) and write `output/<slug>/scene_prompts.json` — one
+  `{scene, covers, phrase, shot_type, visual}` per beat. The meaning-first method (device menu,
+  anti-icon-slop, motif planning, human check before generating) is in the SKILL's B2-B3b;
+  style rules in `docs/visual-style.md`. Do NOT bake style into `visual`; the scripts append it.
+  Log Whisper mishears into `output/<slug>/corrections.json` for the captions.
 
 ## How to run the pipeline (commands)
 See `docs/WORKFLOW.md` §7 for the cheat-sheet. Key scripts in `scripts/`:
-`whisper_phrases.py`, `batch_zturbo.py`, `make_srt.py`, `assemble_clip.py`.
+`whisper_phrases.py`, `batch_zturbo.py`, `contact_sheet.py`, `make_srt.py`, `assemble_clip.py`.
 
 ## Rules
 - Image model = **z-image-turbo** (workflow in `ComfyUi Api Workflow/`). Node map in `scripts/model_test.py`.

@@ -1,4 +1,4 @@
-# script-breakdown — Viral-format script writer + (post-audio) per-phrase breakdown
+# script-breakdown — Viral-format script writer + (post-audio) per-beat breakdown
 
 Turn a topic (or Thai notes from Nuay's real life) into ONE flowing English narration in the
 reverse-engineered **Zen format**, shaped by **HEIGHT as a whole-clip arc** (not rigid chunks).
@@ -11,10 +11,10 @@ reverse-engineered **Zen format**, shaped by **HEIGHT as a whole-clip arc** (not
 ```
 PHASE A  (this skill, first run)         PHASE B  (after Nuay returns audio)
 ─────────────────────────────────       ─────────────────────────────────────
-topic → research → write narration       audio → Whisper timestamps
-      → save script.txt/json                   → segment scenes FROM the audio
-      → STOP. hand off to Nuay.                → write 1 image-prompt per phrase
-        (he records the voice)                 → hand off to ComfyUI batch
+topic → research → write narration       audio → Whisper timestamps (phrases = captions)
+      → save script.txt/json                   → group phrases into VISUAL BEATS
+      → STOP. hand off to Nuay.                → 1 meaning-first image prompt per BEAT
+        (he records the voice)                 → human check → ComfyUI batch → contact sheet → assemble
 ```
 
 > 🎯 North star = **long-form** (~8 min — the format that earns watch-hours / money). Short form is
@@ -23,8 +23,8 @@ topic → research → write narration       audio → Whisper timestamps
 ## Model guidance (READ FIRST)
 - **PHASE A — narration writing = use Opus.** It is the creative core (emotion, rhythm, the Zen
   hook). Sonnet is not reliable enough here. Do not write the script on Sonnet.
-- **PHASE B — mechanical (run Whisper, segment scenes, write image prompts, drive ComfyUI) = use
-  Sonnet** to save Pro/Opus quota. These follow fixed templates and locked style; Sonnet is fine.
+- **PHASE B — run Whisper, group beats, write image prompts, drive ComfyUI = use Sonnet** to save
+  Pro/Opus quota. B2/B3 involve real judgment but follow a clear method; Sonnet handles it.
 
 ## Invoke
 ```
@@ -38,6 +38,8 @@ Options (append after the topic):
         If --length long and --research is not given, default to deep.
 ```
 Working directory: `C:\Users\Darks\Documents\2026 YT Short Project\`
+(Reusing this skill on another machine/channel: swap the persona in A2 for your own real life and
+adjust the working directory — everything else is portable.)
 
 ---
 
@@ -73,6 +75,10 @@ Nuay-life illustration → one memorable line) → close (reframe + 3-beat recap
 
 Personal experience = the heart; the researched stat(s) = the authority. Short declarative sentences,
 second person where it fits, present tense, calm/awe-building, no emojis.
+
+> **Foreign names & Pali terms:** each one you keep in the script ("teikei", "sampajañña", a
+> researcher's name) is a near-guaranteed Whisper mishear later. Keep them — they carry authority —
+> but keep the list short, and expect to fix them in B3's corrections step.
 
 ## A4b — Kill the AI tells (genre-tuned anti-slop)
 A script that reads like ChatGPT is what gets a faceless channel dismissed as "AI slop"
@@ -153,68 +159,133 @@ is unclear. Otherwise wait for Nuay's audio.
 
 > Trigger: an audio file exists in `output/<slug>/` and Nuay says to continue. Prefer **Sonnet** here.
 
-## B1 — Whisper timestamps + audio-driven scene segmentation
+## B1 — Whisper timestamps + phrase segmentation
 Run (uses the project's `ml-env` Python, which has faster-whisper):
 ```
 ml-env\Scripts\python.exe scripts\whisper_phrases.py "<audio path>" <slug>
 ```
 This writes:
 - `words.json` — every word with start/end (reference).
-- `scenes.json` — **phrases segmented from the audio itself** (punctuation + real pauses), one timed
-  scene per phrase. This is the DEFINITIVE breakdown. It does **not** read any pre-split phrase list.
+- `scenes.json` — phrases segmented from the audio itself (punctuation + real pauses), ~1.5-3s each.
 
-Review the printed report: audio duration, scene count, and that **no scene has zero/negative duration**.
-Show Nuay the scene list (or a summary) so he can sanity-check the segmentation before images.
+**These phrases are CAPTION-sized, not image-sized.** They become the .srt cues as-is (short cues
+read well). The image timeline is coarser — that's B2. Review the printed report: audio duration,
+phrase count, no zero/negative durations.
 
-## B2 — Write one image prompt per scene → `scene_prompts.json`
-- Read `docs/visual-style.md` (locked style) for the rules + negatives.
-- For EACH scene in `scenes.json`, write a `visual` that **faithfully depicts that phrase's meaning**
-  (FAITHFULNESS FIRST — if someone saw the image without the caption, they should guess the phrase).
-- Mix shot types for variety (~40% B-ROLL / ~30% CHARACTER / ~30% ATMOSPHERE):
-  - **CHARACTER** — the stick figure actively doing the action.
-  - **B-ROLL** — an object / stat card / chart / icon (no figure).
-  - **ATMOSPHERE** — a wide landscape / setting, figure tiny or absent.
-- Aspect: match the clip. **9:16** for Shorts, **16:9** for long-form (the STYLE_BLOCK in
-  `comfy_run.py` and `assemble_clip.py --landscape` must agree).
-- Schema (one object per scene, same `scene` numbers as `scenes.json`):
+## B2 — Group phrases into VISUAL BEATS
+One image per ~2s phrase produced 220+ images per long clip — half of them 2-word fragments
+("Yet,", "In 1986,") that can't carry a picture, so they got filled with meaningless icon cards,
+and image generation + Ken Burns time doubled. A **beat** = one visual idea on screen.
+
+Read `scenes.json` and group **consecutive** phrases into beats:
+- **Target 3-6s per beat** (1-3 phrases). Hook may cut faster (~2-3s) to grab; the close may
+  breathe (6-8s). Nothing over ~8s — a still held longer drags even with Ken Burns.
+- Merge a fragment with the phrase that completes its thought ("Then at seven," + "I close the
+  laptop…"). Never merge across a section turn (hook→pillar, pillar→pillar, →close).
+- A strong phrase stands alone: a stat reveal, a punchline, the central question — give each its
+  own beat even if short. Emphasis = a cut.
+- Sanity: a 10-min clip should land around **100-140 beats** (~half the phrase count); a 90s Short
+  around **20-30**.
+
+## B3 — One image prompt per beat → `scene_prompts.json`
+Read `docs/visual-style.md` (locked style) first. Then, before writing any prompt:
+
+**Meaning comes from script.txt, timing from scenes.json.** Whisper mishears names and splits
+sentences oddly ("Taike" for "teikei", "It is not in the early 1970s."). Writing a prompt from
+garbled text gives a wrong image. Where a phrase looks off, find the real sentence in `script.txt`
+and depict THAT. Collect every mishear you spot into `output/<slug>/corrections.json`
+(`{"heard": "actually said"}`) — `make_srt.py` applies it to the captions automatically.
+
+**Plan this video's visual language (5 lines, once).** List 3-5 recurring motifs from THIS story's
+world (e.g. this clip: weed rows / the noon sun / the laptop at the wooden table / the alarm clock)
+and 1-2 planned callbacks (the close should visually answer the open). Deliberate repetition of a
+motif builds cohesion; accidental repetition of clip-art reads as laziness. Metaphors must come
+from the story's own world, never from the generic icon shelf (lightbulb, handshake, target).
+
+**Per beat, ask: "sound off, would a viewer FEEL this line from the image alone?"** Then pick the
+device that shows it — whatever the content calls for, in any ratio. There are NO shot-type quotas:
+- **Literal action** — someone does the thing. Default whenever the line has a doable verb.
+- **Place / weather** — the environment carries the feeling (dawn field, brutal noon glare).
+- **Emotion close-up** — the character's face/posture when the line is about an inner state.
+- **Contrast / split-frame** — the line compares two things? Show both halves.
+- **Progression** — change over time in one frame (seed → sprout → plant).
+- **POV** — the line addresses "you"? Show the viewer's own hands/phone/desk.
+- **Scale** — the line is about magnitude? Make the size difference the picture.
+- **Stat card** — a clean number card ("58", "46.9%", simple pie) for every real statistic. The
+  viewer must SEE the number for the authority beat to land. (z-turbo renders digits bold — fine.)
+- **Symbol** — LAST resort, for purely abstract connectives only, and drawn from this video's
+  motifs, not stock icons.
+- **Callback** — re-show an earlier frame, evolved. Strongest at the close.
+
+Bad→good, from a real clip:
+- "we grow for people we know by name" — ✗ a nametag icon beside a vegetable icon →
+  ✓ the character writing a family's name on a small basket of vegetables.
+- "A wandering mind is an unhappy mind" — ✗ a thought-bubble with a scribble →
+  ✓ the character walking one way while a faint ghost-copy of them drifts the other way.
+- "you and I will start the day with the same job" — ✗ two alarm-clock icons →
+  ✓ split frame: the character waking on a farm mat, a generic figure waking in a city bed,
+  the same stretching pose.
+
+**Anti-icon-slop rules.** "a small X icon beside a tiny Y icon" is the visual em-dash — one is
+fine, eighty are slop (a real clip hit 82/221). Never two icon-pair beats in a row; keep them
+under ~1 in 10 overall. The nouns of a phrase are not its meaning — depict what the sentence
+*does*, not the words it contains. If >50% of beats come out B-ROLL, you almost certainly
+icon-slopped; revisit.
+
+Schema (one object per beat; `scene` = the FIRST phrase it covers, so frames keep their names):
 ```json
-[{ "scene": 1, "phrase": "...", "shot_type": "B-ROLL|CHARACTER|ATMOSPHERE", "visual": "..." }]
+[{ "scene": 12, "covers": [12, 13, 14], "phrase": "joined text of the covered phrases",
+   "shot_type": "B-ROLL|CHARACTER|ATMOSPHERE", "visual": "..." }]
 ```
-> **Faithfulness on numbers:** when a phrase states a statistic, make its scene a clean
-> B-ROLL number/chart card ("58", "40%", a simple pie) so the viewer *sees* the fact and the
-> authority beat lands. (z-turbo renders digits imperfectly — overlay the number in post if needed.)
-> **Watch pacing:** a single still held >~8s drags. If a phrase runs that long, add a second
-> visual element or have Nuay read it with a cut. (Future upgrade: a slow Ken Burns push-in in
-> assembly would soften static holds globally.)
+`covers` may be omitted for a 1-phrase beat. Every scenes.json phrase must be covered exactly once
+(`assemble_clip.py` validates). `shot_type` still gates CHARACTER_STYLE injection — set it by what
+the visual actually shows. Aspect: **9:16** Shorts / **16:9** long-form (`batch_zturbo.py --portrait`
+flips both the latent and the style line; `assemble_clip.py --landscape` must agree).
 
-## B2c — Breathing room (intro / outro) — automatic in assembly
+## B3b — Self-review, then the human gate
+Scan the finished list once, as a reviewer:
+1. Same composition or same prop within any ~6-beat window (and it's not a planned callback)? Vary it.
+2. Three+ consecutive beats with the same device or shot_type? Break the run.
+3. Any beat that fails the sound-off test? Rewrite it — that one WILL read as "AI slop" on screen.
+4. Icon-pairs over ~10%? Convert the weakest into literal action / place / character beats.
+
+Then show Nuay: beat count, shot-type mix, the planned motifs/callbacks, and the 5 beats you're
+least confident about (phrase + visual). **Wait for his OK before generating** — images cost
+~26s each on the 5070; a 2-minute check protects a ~1-hour GPU run.
+
+## B4 — Breathing room (intro / outro) — automatic in assembly
 These come from `assemble_clip.py`; do NOT time them in scenes.json:
-- **Lead-in ~1s** — frame 1 shows before the voice starts (the viewer settles in).
-- **Outro ~2.5s** — a final frame holds in silence after the voice ends (let it land).
-- **Fade** — gentle fade in from black at the start, fade out to black at the end.
+- **Lead-in ~1s** — frame 1 holds before the voice starts (the viewer settles in).
+- **Outro ~2.5s** — a final frame holds after the voice ends (let it land).
+- **Fade** — the voice eases in/out; the video fades to black at the very end only (the lead-in
+  hold does the settling at the start — there is no fade-from-black).
 Optionally author ONE dedicated **outro visual** (a calm resolution image — e.g. the figure
 looking at the horizon, lots of empty space) and save it as `frames/scene_end.png`; assembly
 holds THAT through the outro instead of freezing the last narration frame. Tune per clip with
 `--lead-in` / `--outro`.
 
-## B3 — Captions + images + assembly
-- **Captions (sidecar, do NOT burn in):** `python scripts/make_srt.py <slug>` → `output/<slug>/<slug>.srt`.
-  Upload it in YouTube Studio → Subtitles. Keep a CORRECTIONS map in `make_srt.py` for Whisper mishears.
-- **Images:** `python scripts/comfy_run.py --slug <slug> --batch`  (skips existing frames)
-- **Assemble:** `python scripts/assemble_clip.py <slug> [--landscape]`  (16:9 → `--landscape`)
+## B5 — Images → contact sheet → captions → assembly
 ```
-ComfyUI open → python scripts/comfy_run.py --slug <slug> --batch
-then          → python scripts/make_srt.py <slug>
-then          → python scripts/assemble_clip.py <slug> [--landscape]
+ComfyUI open → python scripts\batch_zturbo.py <slug>              (add --portrait for 9:16; resumable, ETA shown)
+check        → ml-env\Scripts\python.exe scripts\contact_sheet.py <slug>
+                 ↳ Nuay eyeballs the grid; re-roll a bad frame:
+                   delete frames\scene_NN.png → python scripts\batch_zturbo.py <slug> --only NN --seed 7
+captions     → python scripts\make_srt.py <slug>                  (applies corrections.json; sidecar .srt,
+                                                                   do NOT burn in — upload in YouTube Studio)
+assemble     → python scripts\assemble_clip.py <slug> [--landscape] [--ken-burns] [--music SFX\track.mp3]
 ```
+`--ken-burns` renders scenes in parallel (`--jobs`, default ~6) — a long clip takes minutes, not
+an hour. Run it in the background and report the printed ETA.
 
 ---
 
 ## Cost map per clip
 - **Script writing** (Phase A): **Opus** — creative, worth the quota.
 - **Voice:** Nuay's own (VoiceBox / Google AI Studio) — free.
-- **Timestamps + segmentation + image prompts + assembly** (Phase B): **Sonnet** + local tools — cheap/free.
-- **Images:** local ComfyUI on the RTX 5070 (free). ~30-50 imgs (short), ~70-90 (long). ~19-35s/img.
+- **Timestamps + beats + image prompts + assembly** (Phase B): **Sonnet** + local tools — cheap/free.
+- **Images:** local ComfyUI on the RTX 5070 (free). ~20-30 beats (short) ≈ 10-15 min;
+  ~100-140 beats (long) ≈ 45-60 min at ~26s/img.
+- **Ken Burns assembly:** ~2-5 min for a long clip (parallel), ~1 min for a Short.
 
 ---
 
