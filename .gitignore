@@ -13,13 +13,17 @@ LOGO/
 test_output/
 data/
 
-# ── media: large and/or copyrighted (keep TEXT artifacts only) ──
+# ── media: large and/or copyrighted ─────────────────────
 *.mp3
 *.wav
 *.mp4
 SFX/
-output/**/frames/
-output/**/frames_*/
-output/**/*.png
+
+# ── per-video outputs: the channel's content, not the pipeline ──
+output/
+Test voice/
+markitdown/
+notes/*
+!notes/_template.md
 
 # (showcase/ images are intentionally NOT ignored — curated portfolio shots)
