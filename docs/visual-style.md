@@ -79,7 +79,12 @@ when the caption is a statistic. Symbols (`?`, `=`, `X`, `%`, arrow) render fine
 
 ## Known model quirks (z-turbo, cfg 1)
 - Negatives are inert → rely on the split style + positive wording to keep scenes clean.
-- Numbers render bold/thick (fine for stat impact). If a clean thin number is needed, overlay it in post.
+- **Numbers: reliable up to ~2 digits, garbles 3+.** "82%" and "49%" render fine; "10,000" came out
+  "1000" and "82%" once dropped to "2%" (re-roll fixed the 2-digit one; 5-digit stayed broken).
+  So: keep stat cards ≤2 digits + %, and for big narrative numbers ("10,000 years") make the beat a
+  SCENE instead (an ancient hand planting the first seed) rather than a number card — or overlay the
+  number in post. A distant/prominent human in an ATMOSPHERE beat can also drift realistic; if a beat
+  needs a clear figure, mark it CHARACTER so it gets the pinned doodle style.
 - Occasional faint texture/grass squiggles in landscapes — acceptable at video speed.
 
 ---
