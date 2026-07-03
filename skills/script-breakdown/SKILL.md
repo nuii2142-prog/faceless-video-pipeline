@@ -293,8 +293,10 @@ an hour. Run it in the background and report the printed ETA.
 YouTube de-monetizes faceless channels under its **"inauthentic / repetitious content"** policy,
 not for using AI. This project's defense is real: a real person's life + real, cited stats. Protect it.
 - **Voice = Nuay's own** (see A9). The single biggest authenticity signal and the hardest thing to copy.
-- **Music = cleared only.** YouTube Audio Library or owned tracks. A Content-ID claim on a random
-  track (e.g. "Way Back Home") diverts the ad revenue or blocks the video — verify before every upload.
+- **Music = cleared only.** Nuay's SFX/ folder is all YouTube Audio Library (cleared for monetized
+  use) — that's the safe pool. The risk is grabbing a track from *outside* it (a random download,
+  a "free" track that carries a Content-ID claim); that diverts ad revenue or blocks the video.
+  Stay inside the Audio Library and check the track's license note (a few ask for attribution).
 - **No mass-production look.** One genuine point of view per video. Never re-skin the same script with
   a new topic; vary the hook and structure. Quantity-farming is exactly what the policy targets.
 - **Stats stay REAL and cited** (enforced in A3). One fabricated number that gets caught kills trust.

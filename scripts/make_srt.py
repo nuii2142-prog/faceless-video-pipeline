@@ -16,22 +16,22 @@ Usage:
 Output:
   output/<slug>/<slug>.srt
 """
-import json, pathlib, sys
+import json, pathlib, re, sys
 
-# Universal caption tidy-ups only (Whisper's odd spacing around hyphens/percent).
-GENERIC_CORRECTIONS = {
-    "40 %": "40%",
-    "to -do": "to-do",
-    "great -grandparents": "great-grandparents",
-}
+# Universal spacing tidy-ups Whisper injects around digits (apply to EVERY project via regex,
+# so no video has to list "82 %", "46 .9 %", "10 ,000" by hand).
+SPACING_FIXES = [
+    (re.compile(r"(\d)\s+\.\s*(\d)"), r"\1.\2"),   # 46 .9 -> 46.9
+    (re.compile(r"(\d)\s+,\s*(\d)"), r"\1,\2"),    # 10 ,000 -> 10,000
+    (re.compile(r"(\d)\s+%"), r"\1%"),             # 82 % -> 82%
+    (re.compile(r"(\w)\s+-(\w)"), r"\1-\2"),       # to -do -> to-do, great -grandparents
+]
 
 
 def load_corrections(d: pathlib.Path) -> dict:
-    corr = dict(GENERIC_CORRECTIONS)
+    """Project-specific Whisper mishears (names, Pali terms, wrong stats)."""
     f = d / "corrections.json"
-    if f.exists():
-        corr.update(json.loads(f.read_text(encoding="utf-8")))
-    return corr
+    return json.loads(f.read_text(encoding="utf-8")) if f.exists() else {}
 
 
 def ts(sec: float) -> str:
@@ -46,8 +46,10 @@ def ts(sec: float) -> str:
 
 
 def fix(text: str, corr: dict) -> str:
-    for a, b in corr.items():
+    for a, b in corr.items():          # project mishears first (may contain the raw spaced form)
         text = text.replace(a, b)
+    for pat, repl in SPACING_FIXES:    # then universal digit-spacing cleanup
+        text = pat.sub(repl, text)
     return text
 
 
@@ -70,9 +72,9 @@ def main(slug: str):
     # runnable check: monotonic, no overlaps
     assert all(scenes[i]["start"] <= scenes[i + 1]["start"] for i in range(len(scenes) - 1)), \
         "scenes not in time order"
-    src = "corrections.json + generic" if (d / "corrections.json").exists() else "generic only"
     print(f"OK -> {out}")
-    print(f"   {len(scenes)} cues | runtime {ts(scenes[-1]['end'])} | corrections: {len(corr)} ({src})")
+    print(f"   {len(scenes)} cues | runtime {ts(scenes[-1]['end'])} | "
+          f"{len(corr)} project fixes + {len(SPACING_FIXES)} spacing rules")
 
 
 if __name__ == "__main__":
