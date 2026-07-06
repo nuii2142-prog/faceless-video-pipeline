@@ -27,3 +27,6 @@ notes/*
 !notes/_template.md
 
 # (showcase/ images are intentionally NOT ignored — curated portfolio shots)
+
+# ── idea/topic planning: content, not pipeline ──
+ideas/

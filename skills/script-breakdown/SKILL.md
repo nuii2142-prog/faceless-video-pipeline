@@ -144,6 +144,13 @@ Real source(s): <citation(s)>
 ✅ Saved: output/<slug>/script.txt, script.json
 Next (you): record script.txt IN YOUR OWN VOICE (a calm, slow read — your accent is the brand,
 not a flaw). Drop the .mp3/.wav into output/<slug>/, then tell me and I'll run Phase B.
+
+VO direction (self-record):
+  PACE: slow, unhurried (~130 wpm) — like speaking to one person at dusk
+  PAUSES: full stop at every line break; let silence breathe
+  HOOK: near-whisper · CLOSE: lift very slightly, hopeful but quiet
+  RE-RECORD any line that sounds "announced", rushed, or salesy
+  FORMAT: WAV, quiet room, keep raw takes — clean_voice.py handles noise/loudness after
 > Why your real voice: it is the one asset no competitor can clone, the strongest authenticity
 > signal for YouTube's anti-"inauthentic content" review, and it removes the synthetic-media
 > disclosure question. AI TTS (VoiceBox / Google AI Studio) only as a stopgap while you build
@@ -193,8 +200,8 @@ Read `docs/visual-style.md` (locked style) first. Then, before writing any promp
 **Meaning comes from script.txt, timing from scenes.json.** Whisper mishears names and splits
 sentences oddly ("Taike" for "teikei", "It is not in the early 1970s."). Writing a prompt from
 garbled text gives a wrong image. Where a phrase looks off, find the real sentence in `script.txt`
-and depict THAT. Collect every mishear you spot into `output/<slug>/corrections.json`
-(`{"heard": "actually said"}`) — `make_srt.py` applies it to the captions automatically.
+and depict THAT. (Captions don't need a corrections file anymore — `make_srt.py` builds them by
+aligning `script.txt` directly to large-v3 word timings, so the .srt text is always the true script.)
 
 **Plan this video's visual language (5 lines, once).** List 3-5 recurring motifs from THIS story's
 world (e.g. this clip: weed rows / the noon sun / the laptop at the wooden table / the alarm clock)
@@ -270,12 +277,24 @@ ComfyUI open → python scripts\batch_zturbo.py <slug>              (add --portr
 check        → ml-env\Scripts\python.exe scripts\contact_sheet.py <slug>
                  ↳ Nuay eyeballs the grid; re-roll a bad frame:
                    delete frames\scene_NN.png → python scripts\batch_zturbo.py <slug> --only NN --seed 7
-captions     → python scripts\make_srt.py <slug>                  (applies corrections.json; sidecar .srt,
+captions     → ml-env\Scripts\python.exe scripts\make_srt.py <slug>   (script-aligned to large-v3 WORD
+                                                                   timings — accurate sync; sidecar .srt,
                                                                    do NOT burn in — upload in YouTube Studio)
 assemble     → python scripts\assemble_clip.py <slug> [--landscape] [--ken-burns] [--music SFX\track.mp3]
 ```
 `--ken-burns` renders scenes in parallel (`--jobs`, default ~6) — a long clip takes minutes, not
 an hour. Run it in the background and report the printed ETA.
+
+**Music: default level = 7%** (`MUSIC_VOL` in `assemble_clip.py`, override with `--music-vol`). A
+bed should not fight the narration — prefer **melody-free ambient/pad/drone** (a moving melody or
+piano competes with speech even at low volume; a static pad reads as "atmosphere", not "information").
+Generate custom beds with `scripts/gen_music.py <out.mp3>` (ACE-Step workflow; defaults to a
+melody-free ambient pad, `--seconds/--seed/--bpm/--tags` to tune) — self-generated = zero Content-ID
+risk. Cleared YouTube Audio Library tracks are the fallback.
+
+## B6 — Before upload
+Run `docs/publish-checklist.md` against the ep and report what's missing. Do not skip the last
+item (sleep guardrail) — late is better than scattered.
 
 ---
 

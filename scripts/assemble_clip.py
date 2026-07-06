@@ -33,7 +33,7 @@ import json, os, pathlib, shutil, subprocess, sys, time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 FPS = 30
-MUSIC_VOL = 0.12   # background music level under the voice (~12%)
+MUSIC_VOL = 0.07   # background music level under the voice (~7%) — soft bed, doesn't fight speech
 LEAD_IN = 1.0      # seconds of frame-1 hold before the voice (pre-roll breath)
 OUTRO = 2.5        # seconds of hold after the voice (post-roll settle)
 FADE_OUT = 1.0     # video fade to black at the very end (inside the OUTRO window)

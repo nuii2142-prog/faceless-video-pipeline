@@ -18,17 +18,21 @@ COMFY_OUT = pathlib.Path(os.environ.get("COMFY_OUT", r"C:\Users\Darks\ComfyUI-Sh
 #   CHARACTER_STYLE -> appended ONLY when shot_type == "CHARACTER".
 # Thin-line, flat, white, balanced medium-large subject inside a safe area (Nuay 2026-06-28).
 BASE_STYLE = (
-    "Minimalist hand-drawn doodle drawn with THIN, fine, clean black pen lines — light and delicate, even "
-    "single-stroke weight, NOT thick, NOT heavy, NOT marker (keep this exact line style). "
-    "Use a FEW soft, gentle, muted flat colors as light accents (soft green, warm tan, gentle sky-blue, soft yellow) "
-    "— calm and subtle, never saturated, never busy; keep the image mostly white and airy. "
+    "Cheerful minimalist hand-drawn doodle drawn with THIN, clean black pen lines — delicate but confident, a "
+    "slightly firmer even outline on the main subject; NOT thick, NOT heavy, NOT marker (keep this thin line style). "
+    "Color it warmly and with life: a fuller, gently cheerful palette layered in a few soft shades (several gentle "
+    "greens from mint to sage to yellow-green, warm tan, soft sky-blue, soft yellow, gentle earth-brown) — soft and "
+    "inviting, richer than pale pastel but never neon, never harsh. "
     "Flat fills only — absolutely NO shading, NO gradient, NO drop shadow, NO paper texture. "
-    "When the scene shows a place or a person, add a FEW small, light supporting details that hint at the "
-    "surroundings and help tell the story (a couple of small plants, a little sun, a few soft ground or horizon "
-    "lines) — gentle, sparse, uncluttered. For a plain object, icon, or number, keep it clean and simple with "
-    "little or no background. Compose the subject at a comfortable MEDIUM-LARGE size, well-proportioned and "
-    "balanced, kept fully inside a safe area so nothing touches the edges. Clean, childlike, calm, low-to-medium "
-    "detail. 16:9 landscape composition."
+    "For a scene that shows a place or a person, FILL the frame with a light, lived-in setting so it feels alive, "
+    "not empty: a soft supporting environment (foliage and small plants, ground and a little sky or horizon, and a "
+    "scattering of tiny dots, dashes and leaf-vein details for gentle sparkle) — keep a little calm open space, but "
+    "avoid large blank white areas. "
+    "For a plain object, icon, number or stat card, keep it clean and simple with little or no background (do NOT "
+    "fill it with scenery). "
+    "Compose the subject at a comfortable MEDIUM-LARGE size, well-proportioned and balanced, kept fully inside a "
+    "safe area so nothing touches the edges. Clean, childlike, warm and lively yet calm, medium detail — never "
+    "cluttered or messy. 16:9 landscape composition."
 )
 
 # Appended ONLY for CHARACTER scenes — keeps figures out of B-ROLL / empty-landscape shots.
