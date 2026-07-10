@@ -50,17 +50,22 @@ BASE_STYLE = (
 # Body style PINNED for consistency (Nuay 2026-06-28): always the SAME outlined-body character,
 # never a bare single line, so the character looks identical across every scene.
 CHARACTER_STYLE = (
-    "The person is ALWAYS the exact same character, drawn identically in every image, in a cute BIG-HEAD chibi "
-    "proportion: a LARGE round WHITE head that is clearly bigger than his body (the big head is his main feature), "
-    "drawn with THIN, fine, delicate, even clean black pen lines. A minimal face: two small black dot eyes, thin "
-    "eyebrows, one small simple curved mouth. Below the big head, a SMALL SLIM body — a short narrow torso with "
-    "thin simple arms and thin simple legs, kept light and slim, NOT chubby, NOT fat, NOT a round pudgy blob. "
-    "His face keeps the same simple parts but his EXPRESSION acts the story: eyes can close in peace, curve into "
-    "a smile, or open wide; the thin eyebrows tilt with worry or lift with wonder; the small mouth can smile, "
-    "fall flat, or open slightly. "
-    "His signature: a simple wide CONICAL woven bamboo farmer hat in pale straw-tan worn on top of his big head, "
-    "drawn with the same thin lines — exactly ONE hat in the whole image, the one on his head. "
-    "Always the same big head, same slim small body, same single hat, same thin delicate line weight."
+    "The person is ALWAYS the exact same character, drawn identically in every image: an adorable, cute big-head "
+    "doodle. His head is a LARGE round WHITE head that is clearly his main feature, drawn with a soft, warm, "
+    "slightly UNEVEN hand-drawn roundness — NOT a perfect geometric circle, gently wobbly and organic the way a "
+    "person draws by hand, and that little imperfection is exactly what makes him cute. "
+    "Below the big head, a SMALL soft ROUNDED body — a short compact torso with short simple arms and short "
+    "simple legs, cute and a little chubby and huggable, kept small and low beneath the big head. NOT tall, NOT "
+    "lanky, NOT stretched, NOT stiff, NOT a slim grown-up figure. Soft, round, and endearing. "
+    "Drawn with clean smooth black pen lines of a MEDIUM even weight — a little heavier than a hairline so he has "
+    "presence and reads clearly, but still soft and simple, NOT thick marker, NOT sketchy. "
+    "A minimal face: two small black dot eyes, thin eyebrows, one small simple curved mouth. His face keeps the "
+    "same simple parts but his EXPRESSION acts the story: eyes can close in peace, curve into a smile, or open "
+    "wide; the thin eyebrows tilt with worry or lift with wonder; the small mouth can smile, fall flat, or open "
+    "slightly. "
+    "Always the same big round head, same small soft rounded body, same medium clean line. "
+    "(The farmer hat is NOT part of the character — it is added only by scenes that ask for it, so he is "
+    "bareheaded here by default.)"
 )
 
 # Negative prompt — INERT on cfg-1 turbo models (z-turbo) but ACTIVE on real-cfg models

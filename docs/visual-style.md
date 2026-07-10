@@ -18,7 +18,8 @@ gold digits. Content nouns in an every-frame block WILL appear in every frame.
 |---|---|---|
 | **Soil** (world) | Every place beat names ONE setting from the location menu below (drawn from Nuay's real farm photos in `farm view Ref/`) — the setting must MATCH the line's meaning: sleep happens in the room, work at the under-house table, harvest in the rows. | Frames tied to the real 30 rai, and the setting varies because the story moves, not because props got shuffled. |
 | **Signal** (accent) | ONE reserved accent: deep warm **amber-gold** — the sun and dawn glow; stat beats write "large deep amber-gold number NN%" into their own `visual`. ⚠️ Never put a draw-the-number instruction in BASE_STYLE (v3/v3.1 tests: stray gold digit on nearly every frame). | Stat frames become brand-recognizable. The name "Soil & Signal" is literally in the palette. |
-| **Character** | **Big-head chibi**: a LARGE round white head (clearly bigger than the body), a SMALL SLIM body (not chubby), THIN delicate lines, + the signature **conical farmer hat** worn on top. Cuter, lighter — Nuay's locked design 2026-07-11 (from a reference he supplied). | A silhouette that is OURS and reads "cute" instantly. A big head + cone hat is trivial geometry for a turbo model, so consistency holds. |
+| **Character** | **Cute round big-head chibi** (locked 2026-07-11): a LARGE round white head with a soft, slightly UNEVEN hand-drawn wobble (not a perfect circle — the imperfection IS the cuteness), a SMALL soft rounded body (short, a little chubby, huggable — NOT tall/lanky/slim), MEDIUM line weight (some presence, not a hairline, not thick marker). | A silhouette that is OURS and reads "aww" instantly. Round + hand-wobble = endearing; a slim/tall version tested as "โย่ง" (lanky) and was rejected. |
+| **Hat = story prop** | The conical farmer hat is NOT always on. It appears in farmer beats (waking as himself, returning to the soil, parents, lifting it, home) and comes OFF during the city/chasing-money beats (leaving the farm, direct-sales, trading, "I was ordinary", night rest). | The hat leaving and returning tracks his identity arc — a detail viewers feel without naming. Also fixes "hat on every frame" monotony. |
 | **Horizon** | Farm wide shots end in **low forested hills** (the real valley) or a wall of trees — NEVER a city skyline. A city skyline appears ONLY in city/contrast beats, where it IS the point. | Kills the odd "Bangkok behind the paddies" clash; hills become a recognizable backdrop. |
 
 ### 📍 Location menu (from `farm view Ref/` — pick per beat, match the meaning)
@@ -83,16 +84,18 @@ Both blocks live in `scripts/comfy_run.py` (single source) and are imported by t
 > minimal face (two small black dot eyes, thin eyebrows, one small curved mouth), and a simple slim body with a
 > clean thin OUTLINE — a narrow rounded torso with thin outlined arms and thin outlined legs (a soft cartoon
 > stick figure with a lightly outlined body, NOT a single bare line, NOT a filled silhouette).
-> **BIG-HEAD chibi proportion (locked 2026-07-11):** a LARGE round white head clearly bigger than the
-> body (the head is the main feature), THIN fine delicate lines, and a SMALL SLIM body — short narrow
-> torso, thin arms/legs, NOT chubby/fat/blobby. (Readability now comes from the bright-white fill
-> against muted graded backgrounds, not from a thick outline — Nuay prefers thin lines.)
-> **His signature: a simple wide CONICAL woven bamboo farmer hat worn on top of the big head — exactly
-> ONE hat in the whole image** (⚠️ never write "worn OR resting beside him": cfg-1 draws BOTH = two
-> hats, verified 3× 2026-07-10).
+> **Cute round big-head chibi (locked 2026-07-11):** a LARGE round white head with a soft, slightly
+> UNEVEN hand-drawn roundness (NOT a perfect circle — the little wobble is the cuteness), a SMALL soft
+> ROUNDED body (short, a little chubby, huggable — NOT tall, NOT lanky, NOT slim/grown-up), and a
+> MEDIUM even line weight (a bit heavier than a hairline = presence; not thick marker). Readability
+> comes from the bright-white fill against muted graded backgrounds.
 > **The EXPRESSION acts the story** — eyes close in peace / curve into a smile / widen; brows tilt;
 > the small mouth smiles, falls flat, or opens.
-> Always the same big head, same slim small body, same single hat, same thin delicate line.
+> **The hat is NOT in CHARACTER_STYLE** (⚠️ any hat clause there = a hat on every frame, and "worn OR
+> resting" = two hats, verified). It is added ONLY by the per-beat `visual` that wants it, as a story
+> prop (see the "Hat = story prop" row above). When it appears it's the same wide conical woven bamboo
+> farmer hat in pale straw-tan.
+> Always the same round head, same small soft body, same medium line.
 
 ---
 
