@@ -23,6 +23,7 @@ Baked-in Windows fixes:
 Must run with the ml-env python (has f5-tts + torch + CUDA).
 """
 import datasets  # noqa: F401  MUST be first — avoids pyarrow/torch DLL crash on Windows
+import os
 import sys
 import subprocess
 from pathlib import Path
@@ -88,7 +89,9 @@ def main():
 
     # Auto-clean: fixes F5's hot/clipping output and evens the level for YouTube.
     cv = Path(__file__).with_name("clean_voice.py")
-    subprocess.run([sys.executable, str(cv), str(raw), str(out)], check=True)
+    env = dict(os.environ)
+    env.pop("PYTHONHASHSEED", None)  # inherited "random" value crashes the child interpreter
+    subprocess.run([sys.executable, str(cv), str(raw), str(out)], check=True, env=env)
     print(f"done -> {out}")
 
 
