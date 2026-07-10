@@ -150,10 +150,12 @@ def _image_timeline(out_dir, scenes):
 
 
 def assemble(slug, landscape=False, music=None, out=None, lead_in=LEAD_IN, outro=OUTRO,
-             ken_burns=False, max_scenes=None, jobs=KB_JOBS, music_vol=MUSIC_VOL):
+             ken_burns=False, max_scenes=None, jobs=KB_JOBS, music_vol=MUSIC_VOL,
+             frames_dir="frames"):
     t_start = time.time()
     W, H = (1920, 1080) if landscape else (1080, 1920)
     out_dir = pathlib.Path("output") / slug
+    fdir = out_dir / frames_dir
 
     scenes = json.loads((out_dir / "scenes.json").read_text(encoding="utf-8"))
     full = _image_timeline(out_dir, scenes)
@@ -169,20 +171,21 @@ def assemble(slug, landscape=False, music=None, out=None, lead_in=LEAD_IN, outro
           + (f"  | KEN BURNS x{jobs}" if ken_burns else ""))
 
     missing = [f"scene_{n:02d}.png" for n, _ in timeline
-               if not (out_dir / "frames" / f"scene_{n:02d}.png").exists()]
+               if not (fdir / f"scene_{n:02d}.png").exists()]
     if missing:
-        sys.exit(f"Missing {len(missing)} frame(s): {', '.join(missing[:5])}"
+        sys.exit(f"Missing {len(missing)} frame(s) in {fdir}: {', '.join(missing[:5])}"
                  + ("..." if len(missing) > 5 else ""))
+    print(f"Frames: {frames_dir}/")
 
-    last_img = (out_dir / "frames" / f"scene_{timeline[-1][0]:02d}.png").resolve()
-    end_png = out_dir / "frames" / "scene_end.png"
+    last_img = (fdir / f"scene_{timeline[-1][0]:02d}.png").resolve()
+    end_png = fdir / "scene_end.png"
     outro_img = end_png.resolve() if end_png.exists() else last_img
     print(f"Outro : {'scene_end.png' if end_png.exists() else 'hold last frame'}")
 
     # Segments: (image, n_frames, zoom_in). Alternate zoom direction for variety.
     segs = []
     for i, (n, start) in enumerate(timeline):
-        img = (out_dir / "frames" / f"scene_{n:02d}.png").resolve()
+        img = (fdir / f"scene_{n:02d}.png").resolve()
         # duration runs to the next image in the FULL timeline — so --max-scenes stays a
         # quick test instead of the last image silently spanning the rest of the audio
         if i + 1 < len(full):
@@ -295,7 +298,10 @@ if __name__ == "__main__":
     ap.add_argument("--lead-in", type=float, default=LEAD_IN, dest="lead_in")
     ap.add_argument("--outro", type=float, default=OUTRO)
     ap.add_argument("--max-scenes", type=int, default=None, dest="max_scenes", help="debug: only first N beats")
+    ap.add_argument("--frames-dir", default="frames", dest="frames_dir",
+                    help="frame folder under output/<slug>/ (use frames_graded after grade_frames.py)")
     args = ap.parse_args()
     assemble(args.slug, landscape=args.landscape, music=args.music, out=args.out,
              lead_in=args.lead_in, outro=args.outro, ken_burns=args.ken_burns,
-             max_scenes=args.max_scenes, jobs=args.jobs, music_vol=args.music_vol)
+             max_scenes=args.max_scenes, jobs=args.jobs, music_vol=args.music_vol,
+             frames_dir=args.frames_dir)

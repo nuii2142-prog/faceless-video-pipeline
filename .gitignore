@@ -8,10 +8,18 @@ __pycache__/
 *.pyc
 
 # ── local tools, models, scratch ───────────────────────
-voicebox/
 LOGO/
 test_output/
 data/
+scratch_tt/
+.playwright-mcp/
+F5 TTS/
+
+# ── PERSONAL media — this repo is PUBLIC, never publish these ──
+# (voice recordings are voice-clone source material; photos are private)
+voice over/
+farm view Ref/
+*.jpeg
 
 # ── media: large and/or copyrighted ─────────────────────
 *.mp3

@@ -4,6 +4,7 @@
 
 ```
 [ ] ภาพทุก scene สไตล์ตรงกัน (เทียบ docs/visual-style.md + contact sheet)
+[ ] ทุกเฟรมผ่าน grade_frames.py แล้ว (house grade + grain) และ assemble ใช้ --frames-dir frames_graded
 [ ] Export ถูก ratio: 16:9 1080p (long-form) / 9:16 (Shorts)
 [ ] Audio levels ok — เสียงพูดชัด, เพลง (ถ้ามี) ไม่กลบ, ผ่าน clean_voice.py แล้ว
 [ ] Loudness ≈ -14 LUFS (assemble_clip.py ใส่ loudnorm อัตโนมัติแล้ว — เช็คได้:

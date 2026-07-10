@@ -57,7 +57,7 @@ def _read_text_arg(arg):
 
 def main():
     args = list(sys.argv[1:])
-    speed = 0.85
+    speed = 0.84
     if "--speed" in args:
         i = args.index("--speed")
         speed = float(args[i + 1])
@@ -72,26 +72,29 @@ def main():
 
     from f5_tts.api import F5TTS
 
-    print(f"loading F5TTS...  (speed {speed}, nfe 85)")
+    print(f"loading F5TTS...  (library defaults, speed {speed})")
     f5 = F5TTS()
+    # Library defaults on purpose (Nuay 2026-07-10: the tuned set from
+    # F5 TTS/f5_tts_install_instructions.md — nfe 85, cfg 2.0, sway off — made the
+    # clone sound LESS like him). Only the speaking pace is set.
     f5.infer(
         ref_file=ref,
         ref_text=ref_text,               # "" -> F5 auto-transcribes the ref with Whisper
         gen_text=text,
         file_wave=str(raw),
-        nfe_step=85,                     # clarity saturation point
+        nfe_step=85,                     # Nuay 2026-07-10: 85 sounds best with default everything-else
+        cfg_strength=1.8,                # Nuay 2026-07-10: balance point — more his timbre than 2.0, crisper than 1.0
+        sway_sampling_coef=None,         # REQUIRED with nfe 85: default sway crashes odeint
+                                         # ("t must be strictly increasing") — not a tuning choice
         speed=speed,
-        cfg_strength=2.0,
-        sway_sampling_coef=None,         # off: bfloat16 bug at high NFE
-        remove_silence=False,            # keep natural gaps; trimming makes pacing jumpy
-        cross_fade_duration=0.15,
     )
 
     # Auto-clean: fixes F5's hot/clipping output and evens the level for YouTube.
     cv = Path(__file__).with_name("clean_voice.py")
     env = dict(os.environ)
     env.pop("PYTHONHASHSEED", None)  # inherited "random" value crashes the child interpreter
-    subprocess.run([sys.executable, str(cv), str(raw), str(out)], check=True, env=env)
+    # --light: loudness+limiter only — the full clean chain's denoiser makes F5 audio ring/echo
+    subprocess.run([sys.executable, str(cv), str(raw), str(out), "--light"], check=True, env=env)
     print(f"done -> {out}")
 
 

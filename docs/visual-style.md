@@ -65,12 +65,14 @@ Both blocks live in `scripts/comfy_run.py` (single source) and are imported by t
 > Thin clean black pen lines (NOT thick/heavy/marker) · the story's world is RURAL THAILAND at first
 > light (place scenes get 1-2 Thai countryside cues; city scenes read as a busy modern Thai city) ·
 > palette = tropical greens (yellow-green → banana-leaf), warm red-brown earth/terracotta, soft cream,
-> pale peach-to-blue dawn sky + low flat mist band · ONE reserved accent = deep warm AMBER-GOLD (sun +
-> dawn glow only in the every-frame sentence) · flat fills, NO shading/gradient/shadow/texture · place
-> scenes FILL the frame, lived-in, no big blank white areas · object/icon/stat beats = clean and
-> simple, little or no background (the amber-gold number treatment is written into each stat beat's
-> `visual`, NOT here) · subject MEDIUM-LARGE inside a safe area · 16:9 landscape composition
-> (batch flag flips to 9:16).
+> pale peach-to-blue dawn sky · ONE reserved accent = deep warm AMBER-GOLD (sun + dawn glow only in
+> the every-frame sentence) · **one soft light source per scene with gentle two-tone CEL shading**
+> (flat poster shapes; still NO airbrush gradients, NO fuzzy shadows, NO 3d, NO paper texture — grain
+> comes from the grade pass) · a FEW well-chosen supporting details, then let the frame BREATHE
+> (calm open areas; backgrounds muted/hazy so the white character is always the brightest thing) ·
+> object/icon/stat beats = clean and simple, little or no background (the amber-gold number treatment
+> is written into each stat beat's `visual`, NOT here) · subject MEDIUM-LARGE inside a safe area ·
+> 16:9 landscape composition (batch flag flips to 9:16).
 
 > Character stays plain WHITE (color goes into environments/objects only) — rich-ish Thai landscape +
 > simple white character is the intended contrast.
@@ -81,10 +83,12 @@ Both blocks live in `scripts/comfy_run.py` (single source) and are imported by t
 > minimal face (two small black dot eyes, thin eyebrows, one small curved mouth), and a simple slim body with a
 > clean thin OUTLINE — a narrow rounded torso with thin outlined arms and thin outlined legs (a soft cartoon
 > stick figure with a lightly outlined body, NOT a single bare line, NOT a filled silhouette).
-> **His signature: a simple wide CONICAL woven bamboo farmer hat in pale straw-tan — worn on his head in
-> outdoor and working scenes, resting beside him or slung on his back in indoor and resting scenes; the
-> SAME hat appears with him in every image.**
-> Always the same head, same body shape, same hat, same thin even line weight.
+> **His signature: a simple wide CONICAL woven bamboo farmer hat worn on his head — exactly ONE hat in
+> the whole image** (⚠️ never write "worn OR resting beside him": cfg-1 draws BOTH options = two hats,
+> verified 3× on 2026-07-10). His outline is slightly THICKER than background lines so he reads first.
+> **His face keeps the same simple parts but the EXPRESSION acts the story** — eyes close in peace /
+> curve into a smile / widen; brows tilt; the small mouth smiles, falls flat, or opens.
+> Always the same head, same body shape, same single hat.
 
 ---
 

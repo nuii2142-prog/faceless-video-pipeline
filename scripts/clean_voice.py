@@ -8,9 +8,11 @@ noise floor -29 dB -> -36 dB, loudness standardized to YouTube -14 LUFS.
 Usage:
     python scripts/clean_voice.py "Test voice/Recording (7).wav"
     python scripts/clean_voice.py raw.wav out.wav
+    python scripts/clean_voice.py raw.wav out.wav --light   # TTS/clean sources
 
-If the NEW mic records clean, lower DENOISE (or set it to "") so the voice
-doesn't go "underwater". Everything else can stay.
+--light: loudness + peak limiting ONLY (no highpass/denoise/compressor).
+Use it for already-clean audio like F5-TTS output — the full chain's denoiser
+adds a ringing/"echoey" artifact on synthetic voices (Nuay heard it 2026-07-10).
 """
 import json
 import re
@@ -36,10 +38,14 @@ def ffmpeg(*args):
 
 
 def main():
-    if len(sys.argv) < 2:
-        sys.exit("usage: python scripts/clean_voice.py <in.wav> [out.wav]")
-    src = Path(sys.argv[1])
-    out = Path(sys.argv[2]) if len(sys.argv) > 2 else src.with_name(src.stem + "_clean.wav")
+    global PRECHAIN
+    args = [a for a in sys.argv[1:] if a != "--light"]
+    if "--light" in sys.argv:
+        PRECHAIN = "alimiter=limit=0.9"   # peak safety only — keep the raw voice character
+    if not args:
+        sys.exit("usage: python scripts/clean_voice.py <in.wav> [out.wav] [--light]")
+    src = Path(args[0])
+    out = Path(args[1]) if len(args) > 1 else src.with_name(src.stem + "_clean.wav")
 
     # Pass 1 - measure loudness AFTER the pre-chain, so loudnorm corrects what
     # the listener actually hears (post denoise + compression).

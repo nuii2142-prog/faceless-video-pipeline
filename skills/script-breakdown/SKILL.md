@@ -161,10 +161,10 @@ VO direction (self-record):
   FORMAT: WAV, quiet room, keep raw takes — clean_voice.py handles noise/loudness after
 > Why your real voice: it is the one asset no competitor can clone, the strongest authenticity
 > signal for YouTube's anti-"inauthentic content" review, and it removes the synthetic-media
-> disclosure question. Current alternative: F5-TTS cloned from your own Maono reference
-> (`scripts/f5_speak.py`, speed 0.85, ref = `voice over/voice 02.wav` + its transcript) — free,
-> local, your own timbre. It is still synthetic audio: tick YouTube's altered-content
-> disclosure on upload.
+> disclosure question. Current alternative: ElevenLabs Professional Voice Clone of Nuay's own
+> voice (trial 2026-07-11). F5-TTS (`scripts/f5_speak.py`, tuned 0.84/cfg 1.8/nfe 85) exists as
+> an emergency fallback but Nuay judged its delivery too flat to publish. Any synthetic voice:
+> tick YouTube's altered-content disclosure on upload.
 ```
 Then **stop**. Do not run Whisper, do not invent scenes, do not generate images. If you have a genuinely
 useful idea (a stronger hook, a better stat, a thumbnail/title angle), offer it briefly. Ask if anything
@@ -312,10 +312,13 @@ ComfyUI open → python scripts\batch_zturbo.py <slug>              (add --portr
 check        → ml-env\Scripts\python.exe scripts\contact_sheet.py <slug>
                  ↳ Nuay eyeballs the grid; re-roll a bad frame:
                    delete frames\scene_NN.png → python scripts\batch_zturbo.py <slug> --only NN --seed 7
+grade        → ml-env\Scripts\python.exe scripts\grade_frames.py <slug>   (AFTER the human gate — the
+                 "Soil & Signal dawn" house grade + paper grain; writes frames_graded/. Re-run after
+                 any re-roll. Every published frame goes through this.)
 captions     → ml-env\Scripts\python.exe scripts\make_srt.py <slug>   (script-aligned to large-v3 WORD
                                                                    timings — accurate sync; sidecar .srt,
                                                                    do NOT burn in — upload in YouTube Studio)
-assemble     → python scripts\assemble_clip.py <slug> [--landscape] [--ken-burns] [--music SFX\track.mp3]
+assemble     → python scripts\assemble_clip.py <slug> --frames-dir frames_graded [--landscape] [--ken-burns] [--music SFX\track.mp3]
 ```
 `--ken-burns` renders scenes in parallel (`--jobs`, default ~6) — a long clip takes minutes, not
 an hour. Run it in the background and report the printed ETA.
@@ -335,10 +338,12 @@ item (sleep guardrail) — late is better than scattered.
 
 ## Cost map per clip
 - **Script writing** (Phase A): **Opus** — creative, worth the quota.
-- **Voice (current):** **F5-TTS local clone of Nuay's own voice** — ref `voice over/voice 02.wav`
-  (Maono, 10.6s) + transcript, `scripts/f5_speak.py`, speed 0.85, nfe 85 — free, his timbre,
-  un-copyable brand. Still synthetic ⇒ ALWAYS tick YouTube's altered-content disclosure.
-  ElevenLabs Professional Voice Clone stays the paid upgrade path if F5 quality ever caps out.
+- **Voice (current plan, 2026-07-11):** **ElevenLabs Professional Voice Clone of Nuay's own
+  voice** — Creator plan, batch-and-pause rhythm (~$8-11/mo effective; see memory
+  project-budget-voice-strategy). Still synthetic ⇒ ALWAYS tick the altered-content disclosure.
+  F5-TTS local (`scripts/f5_speak.py`, tuned 0.84/cfg 1.8/nfe 85, ref `voice over/voice 02.wav`
+  + transcript) = free emergency fallback — Nuay judged it too flat to publish. Recording
+  himself stays the zero-cost, zero-disclosure gold standard.
 - **Timestamps + beats + image prompts + assembly** (Phase B): **Sonnet** + local tools — cheap/free.
 - **Images:** local ComfyUI on the RTX 5070 (free). ~20-30 beats (short) ≈ 10-15 min;
   ~100-140 beats (long) ≈ 45-60 min at ~26s/img.
@@ -349,11 +354,12 @@ item (sleep guardrail) — late is better than scattered.
 ## Monetization guardrails (keep the channel eligible)
 YouTube de-monetizes faceless channels under its **"inauthentic / repetitious content"** policy,
 not for using AI. This project's defense is real: a real person's life + real, cited stats. Protect it.
-- **Voice = Nuay's likeness.** Current: F5-TTS clone of Nuay's OWN Maono recording (see Cost
-  map) — a real person's identifiable voice is the authenticity signal AND the hardest thing to
-  copy. **It is still synthetic audio: tick YouTube's altered-content disclosure on every
-  upload** — the disclosure costs ~nothing; an undisclosed synthetic voice that gets flagged is
-  the real monetization risk. (Recording himself for real removes the disclosure entirely.)
+- **Voice = Nuay's likeness.** Current plan: ElevenLabs Professional Voice Clone of Nuay's OWN
+  voice (see Cost map) — a real person's identifiable voice is the authenticity signal AND the
+  hardest thing to copy. **Any clone is still synthetic audio: tick YouTube's altered-content
+  disclosure on every upload** — the disclosure costs ~nothing; an undisclosed synthetic voice
+  that gets flagged is the real monetization risk. (Recording himself for real removes the
+  disclosure entirely.)
 - **Music = cleared only.** Nuay's SFX/ folder is all YouTube Audio Library (cleared for monetized
   use) — that's the safe pool. The risk is grabbing a track from *outside* it (a random download,
   a "free" track that carries a Content-ID claim); that diverts ad revenue or blocks the video.
