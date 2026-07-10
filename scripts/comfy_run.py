@@ -50,17 +50,17 @@ BASE_STYLE = (
 # Body style PINNED for consistency (Nuay 2026-06-28): always the SAME outlined-body character,
 # never a bare single line, so the character looks identical across every scene.
 CHARACTER_STYLE = (
-    "The person is ALWAYS the exact same character, drawn identically in every image: a round WHITE head with a "
-    "minimal face (two small black dot eyes, thin eyebrows, one small curved mouth), and a simple slim body with a "
-    "clean OUTLINE drawn slightly THICKER than the background lines so he reads first — a narrow rounded torso "
-    "with outlined arms and legs (a soft cartoon stick figure with a lightly outlined body, NOT a single bare "
-    "line, NOT a filled silhouette). "
+    "The person is ALWAYS the exact same character, drawn identically in every image, in a cute BIG-HEAD chibi "
+    "proportion: a LARGE round WHITE head that is clearly bigger than his body (the big head is his main feature), "
+    "drawn with THIN, fine, delicate, even clean black pen lines. A minimal face: two small black dot eyes, thin "
+    "eyebrows, one small simple curved mouth. Below the big head, a SMALL SLIM body — a short narrow torso with "
+    "thin simple arms and thin simple legs, kept light and slim, NOT chubby, NOT fat, NOT a round pudgy blob. "
     "His face keeps the same simple parts but his EXPRESSION acts the story: eyes can close in peace, curve into "
     "a smile, or open wide; the thin eyebrows tilt with worry or lift with wonder; the small mouth can smile, "
     "fall flat, or open slightly. "
-    "His signature: a simple wide CONICAL woven bamboo farmer hat in pale straw-tan worn on his head, drawn "
-    "with the same thin lines — exactly ONE hat in the whole image, the one on his head. "
-    "Always the same head, same body shape, same single hat, same thin even line weight."
+    "His signature: a simple wide CONICAL woven bamboo farmer hat in pale straw-tan worn on top of his big head, "
+    "drawn with the same thin lines — exactly ONE hat in the whole image, the one on his head. "
+    "Always the same big head, same slim small body, same single hat, same thin delicate line weight."
 )
 
 # Negative prompt — INERT on cfg-1 turbo models (z-turbo) but ACTIVE on real-cfg models

@@ -18,7 +18,7 @@ gold digits. Content nouns in an every-frame block WILL appear in every frame.
 |---|---|---|
 | **Soil** (world) | Every place beat names ONE setting from the location menu below (drawn from Nuay's real farm photos in `farm view Ref/`) — the setting must MATCH the line's meaning: sleep happens in the room, work at the under-house table, harvest in the rows. | Frames tied to the real 30 rai, and the setting varies because the story moves, not because props got shuffled. |
 | **Signal** (accent) | ONE reserved accent: deep warm **amber-gold** — the sun and dawn glow; stat beats write "large deep amber-gold number NN%" into their own `visual`. ⚠️ Never put a draw-the-number instruction in BASE_STYLE (v3/v3.1 tests: stray gold digit on nearly every frame). | Stat frames become brand-recognizable. The name "Soil & Signal" is literally in the palette. |
-| **Character** | Same white blob + signature **conical woven farmer hat**: worn outdoors/working, resting beside him indoors — present in every character frame. | A silhouette that is OURS. A cone is trivial geometry for a turbo model, so consistency holds. |
+| **Character** | **Big-head chibi**: a LARGE round white head (clearly bigger than the body), a SMALL SLIM body (not chubby), THIN delicate lines, + the signature **conical farmer hat** worn on top. Cuter, lighter — Nuay's locked design 2026-07-11 (from a reference he supplied). | A silhouette that is OURS and reads "cute" instantly. A big head + cone hat is trivial geometry for a turbo model, so consistency holds. |
 | **Horizon** | Farm wide shots end in **low forested hills** (the real valley) or a wall of trees — NEVER a city skyline. A city skyline appears ONLY in city/contrast beats, where it IS the point. | Kills the odd "Bangkok behind the paddies" clash; hills become a recognizable backdrop. |
 
 ### 📍 Location menu (from `farm view Ref/` — pick per beat, match the meaning)
@@ -83,12 +83,16 @@ Both blocks live in `scripts/comfy_run.py` (single source) and are imported by t
 > minimal face (two small black dot eyes, thin eyebrows, one small curved mouth), and a simple slim body with a
 > clean thin OUTLINE — a narrow rounded torso with thin outlined arms and thin outlined legs (a soft cartoon
 > stick figure with a lightly outlined body, NOT a single bare line, NOT a filled silhouette).
-> **His signature: a simple wide CONICAL woven bamboo farmer hat worn on his head — exactly ONE hat in
-> the whole image** (⚠️ never write "worn OR resting beside him": cfg-1 draws BOTH options = two hats,
-> verified 3× on 2026-07-10). His outline is slightly THICKER than background lines so he reads first.
-> **His face keeps the same simple parts but the EXPRESSION acts the story** — eyes close in peace /
-> curve into a smile / widen; brows tilt; the small mouth smiles, falls flat, or opens.
-> Always the same head, same body shape, same single hat.
+> **BIG-HEAD chibi proportion (locked 2026-07-11):** a LARGE round white head clearly bigger than the
+> body (the head is the main feature), THIN fine delicate lines, and a SMALL SLIM body — short narrow
+> torso, thin arms/legs, NOT chubby/fat/blobby. (Readability now comes from the bright-white fill
+> against muted graded backgrounds, not from a thick outline — Nuay prefers thin lines.)
+> **His signature: a simple wide CONICAL woven bamboo farmer hat worn on top of the big head — exactly
+> ONE hat in the whole image** (⚠️ never write "worn OR resting beside him": cfg-1 draws BOTH = two
+> hats, verified 3× 2026-07-10).
+> **The EXPRESSION acts the story** — eyes close in peace / curve into a smile / widen; brows tilt;
+> the small mouth smiles, falls flat, or opens.
+> Always the same big head, same slim small body, same single hat, same thin delicate line.
 
 ---
 
