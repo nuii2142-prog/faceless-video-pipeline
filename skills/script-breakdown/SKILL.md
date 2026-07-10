@@ -70,6 +70,14 @@ HEIGHT is the emotional arc of the WHOLE piece, blended with `format-spec.md`:
 central question → one-line promise) → core idea + the real stat (authority) → ONE sensory scene
 from Nuay's real life → quiet takeaway + **callback to the opening image**.
 
+> **Hook A/B (Shorts only — decided by data, not taste):** alternate the opener across consecutive
+> Shorts. **atmosphere-first** = the immersive 2nd-person moment as written above. **stat-first** =
+> cold-open on the strongest real number in one blunt line ("97% of day traders lose money. I was
+> one of them."), THEN drop into the immersive moment — same Zen body, only the first ~6s differ.
+> Record the variant in `script.json` (`"hook_variant": "atmosphere" | "stat"`) and compare
+> 10-second retention in Analytics after a few of each. When one clearly wins, make it the default
+> and retire this note.
+
 **long (~8 min):** Hook (4 beats) → **3 pillars** (each: transition sentence → real anchor → a
 Nuay-life illustration → one memorable line) → close (reframe + 3-beat recap + callback).
 
@@ -153,8 +161,10 @@ VO direction (self-record):
   FORMAT: WAV, quiet room, keep raw takes — clean_voice.py handles noise/loudness after
 > Why your real voice: it is the one asset no competitor can clone, the strongest authenticity
 > signal for YouTube's anti-"inauthentic content" review, and it removes the synthetic-media
-> disclosure question. AI TTS (VoiceBox / Google AI Studio) only as a stopgap while you build
-> the habit — and if you do use it, tick YouTube's altered-content disclosure on upload.
+> disclosure question. Current alternative: F5-TTS cloned from your own Maono reference
+> (`scripts/f5_speak.py`, speed 0.85, ref = `voice over/voice 02.wav` + its transcript) — free,
+> local, your own timbre. It is still synthetic audio: tick YouTube's altered-content
+> disclosure on upload.
 ```
 Then **stop**. Do not run Whisper, do not invent scenes, do not generate images. If you have a genuinely
 useful idea (a stronger hook, a better stat, a thumbnail/title angle), offer it briefly. Ask if anything
@@ -209,6 +219,18 @@ and 1-2 planned callbacks (the close should visually answer the open). Deliberat
 motif builds cohesion; accidental repetition of clip-art reads as laziness. Metaphors must come
 from the story's own world, never from the generic icon shelf (lightbulb, handshake, target).
 
+**Every beat's `visual` MUST name a SETTING + a CAMERA** from the menus in `docs/visual-style.md`
+(location menu = Nuay's real farm, photographed in `farm view Ref/`). BASE_STYLE carries zero
+scene content by design — if the visual doesn't say where we are and from what angle, the model
+invents the same generic outdoor frame every time. The setting must MATCH the meaning: sleeping
+happens INSIDE the wooden room (walls + floor visible), desk work at the under-house table or
+indoors at night, field lines in the plowed beds / vegetable rows / paddy. Farm wide shots end in
+low forested hills or a tree wall, never a city skyline (skylines belong only to city beats).
+The farmer hat lives in CHARACTER_STYLE — don't restate it, but you MAY use it as a story prop
+(hung on a peg = rest; lifted on = the day begins). A farm dog is welcome as a small life detail.
+One amber-gold accent is reserved for sun / dawn glow — write stat numbers as "large deep
+amber-gold NN%" in the stat beat itself, never elsewhere.
+
 **Per beat, ask: "sound off, would a viewer FEEL this line from the image alone?"** Then pick the
 device that shows it — whatever the content calls for, in any ratio. There are NO shot-type quotas:
 - **Literal action** — someone does the thing. Default whenever the line has a doable verb.
@@ -220,8 +242,16 @@ device that shows it — whatever the content calls for, in any ratio. There are
 - **Scale** — the line is about magnitude? Make the size difference the picture.
 - **Stat card** — a clean number card ("58", "46.9%", simple pie) for every real statistic. The
   viewer must SEE the number for the authority beat to land. (z-turbo renders digits bold — fine.)
+  Write the brand treatment INTO the beat's `visual`: "a large deep amber-gold number 97% floating
+  in a calm open sky above a quiet field, nothing else". Never put a draw-the-number instruction in
+  BASE_STYLE — it applies to every frame and cfg-1 will stamp a random gold digit on all of them
+  (verified twice, 2026-07-09).
 - **Symbol** — LAST resort, for purely abstract connectives only, and drawn from this video's
   motifs, not stock icons.
+- **Playful object B-ROLL — aim for ~10-15% of beats.** Fun close-ups of story-world objects
+  give the eye a rest from people-and-places and add rhythm: eggs in a woven basket, a drip
+  line beading water, muddy boots by the door, a kettle steaming, a seedling tray, the dog's
+  ear flicking. Concrete, charming, one object each.
 - **Callback** — re-show an earlier frame, evolved. Strongest at the close.
 
 Bad→good, from a real clip:
@@ -255,6 +285,11 @@ Scan the finished list once, as a reviewer:
 2. Three+ consecutive beats with the same device or shot_type? Break the run.
 3. Any beat that fails the sound-off test? Rewrite it — that one WILL read as "AI slop" on screen.
 4. Icon-pairs over ~10%? Convert the weakest into literal action / place / character beats.
+5. **Standing-wide budget: max 2 "character stands/walks in a field, full body, wide" beats per
+   clip** (morning-before-the-sun-short shipped 5 — the whole back third looked identical at
+   video speed). Consecutive CHARACTER beats must change at least TWO of {camera distance,
+   angle, action/prop}: wide walking → close-up on hands in the soil → over-shoulder at the
+   seedling → looking up at the sky. Emotional beats especially want CLOSE, not another wide.
 
 Then show Nuay: beat count, shot-type mix, the planned motifs/callbacks, and the 5 beats you're
 least confident about (phrase + visual). **Wait for his OK before generating** — images cost
@@ -300,7 +335,10 @@ item (sleep guardrail) — late is better than scattered.
 
 ## Cost map per clip
 - **Script writing** (Phase A): **Opus** — creative, worth the quota.
-- **Voice:** Nuay's own (VoiceBox / Google AI Studio) — free.
+- **Voice (current):** **F5-TTS local clone of Nuay's own voice** — ref `voice over/voice 02.wav`
+  (Maono, 10.6s) + transcript, `scripts/f5_speak.py`, speed 0.85, nfe 85 — free, his timbre,
+  un-copyable brand. Still synthetic ⇒ ALWAYS tick YouTube's altered-content disclosure.
+  ElevenLabs Professional Voice Clone stays the paid upgrade path if F5 quality ever caps out.
 - **Timestamps + beats + image prompts + assembly** (Phase B): **Sonnet** + local tools — cheap/free.
 - **Images:** local ComfyUI on the RTX 5070 (free). ~20-30 beats (short) ≈ 10-15 min;
   ~100-140 beats (long) ≈ 45-60 min at ~26s/img.
@@ -311,7 +349,11 @@ item (sleep guardrail) — late is better than scattered.
 ## Monetization guardrails (keep the channel eligible)
 YouTube de-monetizes faceless channels under its **"inauthentic / repetitious content"** policy,
 not for using AI. This project's defense is real: a real person's life + real, cited stats. Protect it.
-- **Voice = Nuay's own** (see A9). The single biggest authenticity signal and the hardest thing to copy.
+- **Voice = Nuay's likeness.** Current: F5-TTS clone of Nuay's OWN Maono recording (see Cost
+  map) — a real person's identifiable voice is the authenticity signal AND the hardest thing to
+  copy. **It is still synthetic audio: tick YouTube's altered-content disclosure on every
+  upload** — the disclosure costs ~nothing; an undisclosed synthetic voice that gets flagged is
+  the real monetization risk. (Recording himself for real removes the disclosure entirely.)
 - **Music = cleared only.** Nuay's SFX/ folder is all YouTube Audio Library (cleared for monetized
   use) — that's the safe pool. The risk is grabbing a track from *outside* it (a random download,
   a "free" track that carries a Content-ID claim); that diverts ad revenue or blocks the video.

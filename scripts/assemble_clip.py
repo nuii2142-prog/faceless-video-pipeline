@@ -34,6 +34,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 FPS = 30
 MUSIC_VOL = 0.07   # background music level under the voice (~7%) — soft bed, doesn't fight speech
+# Platform loudness: YouTube/TikTok normalize to ~-14 LUFS and only turn audio DOWN, never up —
+# a quiet mix plays quiet next to every other Short (the Kokoro short measured -19.7 LUFS raw).
+# Two-pass: a fast audio-only pass measures the mix, then the mux applies loudnorm in LINEAR
+# mode with the measured values (single-pass dynamic undershot: -15.8 for a -14 target).
+# ponytail: TP ceiling is what stops us short of -14.0 exactly (~-14.6 lands); a peak limiter
+# before loudnorm is the upgrade path if that last half-LU ever matters.
+LOUDNORM = "loudnorm=I=-14:TP=-1:LRA=11"
 LEAD_IN = 1.0      # seconds of frame-1 hold before the voice (pre-roll breath)
 OUTRO = 2.5        # seconds of hold after the voice (post-roll settle)
 FADE_OUT = 1.0     # video fade to black at the very end (inside the OUTRO window)
@@ -55,6 +62,34 @@ def _run(cmd):
     if r.returncode != 0:
         raise RuntimeError("FFMPEG ERROR:\n" + r.stderr[-2000:])
     return r
+
+
+def _achain(vi, mi, voice_f, music_vol, total, music):
+    """Audio filter chain up to (not including) loudnorm; vi/mi = voice/music input indices."""
+    if music:
+        return (f"[{vi}:a]{voice_f}[a1];[{mi}:a]volume={music_vol}[a2];"
+                f"[a1][a2]amix=inputs=2:duration=first:normalize=0,apad,atrim=0:{total}")
+    return f"[{vi}:a]{voice_f},apad,atrim=0:{total}"
+
+
+def _measured_loudnorm(audio, music, voice_f, music_vol, total):
+    """Pass 1: measure the audio mix alone (fast), return a calibrated linear loudnorm string."""
+    inputs = ["-i", str(audio)]
+    if music:
+        inputs += ["-stream_loop", "-1", "-i", str(pathlib.Path(music).resolve())]
+    pre = _achain(0, 1, voice_f, music_vol, total, music)
+    r = subprocess.run(
+        ["ffmpeg", "-hide_banner", "-nostats"] + inputs +
+        ["-filter_complex", pre + f",{LOUDNORM}:print_format=json", "-f", "null", os.devnull],
+        capture_output=True, text=True)
+    try:
+        m = json.loads(r.stderr[r.stderr.rindex("{"):r.stderr.rindex("}") + 1])
+        return (f"{LOUDNORM}:measured_I={m['input_i']}:measured_TP={m['input_tp']}"
+                f":measured_LRA={m['input_lra']}:measured_thresh={m['input_thresh']}"
+                f":offset={m['target_offset']}:linear=true")
+    except (ValueError, KeyError):
+        print("loudness measure pass failed — falling back to single-pass loudnorm")
+        return LOUDNORM
 
 
 def _audio_dur(path) -> float:
@@ -216,20 +251,18 @@ def assemble(slug, landscape=False, music=None, out=None, lead_in=LEAD_IN, outro
              f"afade=t=out:st={aout}:d={AFADE_OUT}")
     tail = [
         "-c:v", "libx264", "-crf", "20", "-preset", "fast",
-        "-c:a", "aac", "-b:a", "192k",
+        "-c:a", "aac", "-b:a", "192k", "-ar", "48000",  # loudnorm upsamples to 192k internally
         "-r", str(FPS), "-pix_fmt", "yuv420p", "-t", str(total), str(output),
     ]
 
+    ln = _measured_loudnorm(audio, music, voice, music_vol, total)
+    filt = f"{vid};{_achain(1, 2, voice, music_vol, total, music)},{ln}[a]"
     if music:
-        filt = (f"{vid};"
-                f"[1:a]{voice}[a1];[2:a]volume={music_vol}[a2];"
-                f"[a1][a2]amix=inputs=2:duration=first:normalize=0,apad,atrim=0:{total}[a]")
         cmd = ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat_file),
                "-i", str(audio), "-stream_loop", "-1", "-i", str(pathlib.Path(music).resolve()),
                "-filter_complex", filt, "-map", "[v]", "-map", "[a]"] + tail
         print(f"Music : {pathlib.Path(music).name} @ {int(music_vol*100)}%")
     else:
-        filt = f"{vid};[1:a]{voice},apad,atrim=0:{total}[a]"
         cmd = ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat_file),
                "-i", str(audio), "-filter_complex", filt, "-map", "[v]", "-map", "[a]"] + tail
 

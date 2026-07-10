@@ -17,16 +17,21 @@ COMFY_OUT = pathlib.Path(os.environ.get("COMFY_OUT", r"C:\Users\Darks\ComfyUI-Sh
 #   BASE_STYLE      -> appended to EVERY scene (no mention of a person).
 #   CHARACTER_STYLE -> appended ONLY when shot_type == "CHARACTER".
 # Thin-line, flat, white, balanced medium-large subject inside a safe area (Nuay 2026-06-28).
+# v4 (2026-07-09): BASE_STYLE says HOW to draw only. WHAT to draw — the setting, props and
+# camera — lives in each beat's `visual` (menus in docs/visual-style.md + SKILL.md B3). Putting
+# scene content here stamped the same road/jar/banana onto every frame, indoor scenes included.
 BASE_STYLE = (
     "Cheerful minimalist hand-drawn doodle drawn with THIN, clean black pen lines — delicate but confident, a "
     "slightly firmer even outline on the main subject; NOT thick, NOT heavy, NOT marker (keep this thin line style). "
-    "Color it warmly and with life: a fuller, gently cheerful palette layered in a few soft shades (several gentle "
-    "greens from mint to sage to yellow-green, warm tan, soft sky-blue, soft yellow, gentle earth-brown) — soft and "
-    "inviting, richer than pale pastel but never neon, never harsh. "
-    "Flat fills only — absolutely NO shading, NO gradient, NO drop shadow, NO paper texture. "
-    "For a scene that shows a place or a person, FILL the frame with a light, lived-in setting so it feels alive, "
-    "not empty: a soft supporting environment (foliage and small plants, ground and a little sky or horizon, and a "
-    "scattering of tiny dots, dashes and leaf-vein details for gentle sparkle) — keep a little calm open space, but "
+    "Palette, flat fills only: lush tropical greens from fresh yellow-green to deep banana-leaf green, dark rich "
+    "soil brown, warm terracotta, straw-tan, soft cream, and a pale peach-to-blue dawn sky — warm and alive, "
+    "richer than pale pastel but never neon, never harsh. "
+    "Reserve ONE accent color: deep warm AMBER-GOLD, used only for the sun and the dawn glow — always the single "
+    "warmest thing in the frame. "
+    "Absolutely NO shading, NO gradient, NO drop shadow, NO paper texture. "
+    "FILL the frame with the scene's own setting so it feels lived-in and alive, with supporting details that "
+    "belong to THAT place — an indoor scene shows its room honestly (wooden walls, floor, simple furniture, a "
+    "window); an outdoor scene shows its plants, ground and a little sky — keep a little calm open space, but "
     "avoid large blank white areas. "
     "For a plain object, icon, number or stat card, keep it clean and simple with little or no background (do NOT "
     "fill it with scenery). "
@@ -43,7 +48,9 @@ CHARACTER_STYLE = (
     "minimal face (two small black dot eyes, thin eyebrows, one small curved mouth), and a simple slim body with a "
     "clean thin OUTLINE — a narrow rounded torso with thin outlined arms and thin outlined legs (a soft cartoon "
     "stick figure with a lightly outlined body, NOT a single bare line, NOT a filled silhouette). "
-    "Always the same head, same body shape, same thin even line weight."
+    "His signature: a simple wide CONICAL woven bamboo farmer hat in pale straw-tan worn on his head, drawn "
+    "with the same thin lines — exactly ONE hat in the whole image, the one on his head. "
+    "Always the same head, same body shape, same single hat, same thin even line weight."
 )
 
 # Negative prompt — INERT on cfg-1 turbo models (z-turbo) but ACTIVE on real-cfg models

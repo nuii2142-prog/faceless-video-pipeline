@@ -54,7 +54,7 @@ Both written to `output/<slug>/` (slug = kebab-case topic):
 | File | Contents | Used by |
 |------|---------|---------|
 | `script.json` | Structured beats: `{ hook, explain, illustrate, teach, narration, word_count, est_duration_sec }` | Phase F (image direction, future) |
-| `script.txt` | `narration` field only — 4 beats joined, clean spoken text | **Phase D (Chatterbox TTS)** immediately |
+| `script.txt` | `narration` field only — 4 beats joined, clean spoken text | **Phase D (TTS)** immediately |
 
 `narration` = the 4 beats concatenated with single newlines. This is the direct handoff to voice.
 
@@ -69,7 +69,7 @@ Both written to `output/<slug>/` (slug = kebab-case topic):
     → output/<slug>/script.json
     → output/<slug>/script.txt
     ↓
-[Phase D] Chatterbox TTS reads script.txt → audio.wav
+[Phase D] TTS reads script.txt → audio.wav
     ↓
 [Phase E] Whisper timestamps audio.wav → timestamps.json
     ↓

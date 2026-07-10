@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build a `/faceless-short` Claude Code skill that accepts a topic or Thai notes file and outputs a HEIGHT-framework English script as `output/<slug>/script.json` + `output/<slug>/script.txt`, ready for Phase D (Chatterbox TTS).
+**Goal:** Build a `/faceless-short` Claude Code skill that accepts a topic or Thai notes file and outputs a HEIGHT-framework English script as `output/<slug>/script.json` + `output/<slug>/script.txt`, ready for Phase D (TTS).
 
 **Architecture:** Three files — `SKILL.md` (Claude reads this when invoked, does the generation), `notes/_template.md` (raw content template), and `scripts/validate_script.py` (confirms output structure). No new Python packages needed — stdlib only.
 

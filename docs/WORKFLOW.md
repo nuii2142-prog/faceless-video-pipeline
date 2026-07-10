@@ -49,7 +49,9 @@ Everything heavy (images, voice) runs **locally / free**. Claude is only the orc
 /script-breakdown "your topic"  --length long --research deep
 ```
 - Claude researches a REAL stat, writes the narration (Zen format), saves `script.txt` + `script.json`, then **stops**.
-- You review, then **record the voice** (VoiceBox / Google AI Studio / ElevenLabs) and drop the audio file into `output/<slug>/`.
+- You review, then produce the voice — record it yourself on the Maono mic, or generate it with
+  **F5-TTS** cloned from your reference (`ml-env\Scripts\python.exe scripts\f5_speak.py "voice over\voice 02.wav" output\<slug>\script.txt output\<slug>\voice.wav "voice over\voice 02_transcript.txt"`,
+  speed 0.85) — and drop the audio file into `output/<slug>/`.
 
 > Length control: long ≈ 1,200 words (~8 min). You can cap it — see FAQ on character count.
 

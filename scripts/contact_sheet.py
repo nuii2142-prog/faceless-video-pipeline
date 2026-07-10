@@ -35,7 +35,7 @@ def main(slug: str, cols: int, tag: str | None):
         draw.rectangle([x, y, x + 14 + 9 * len(label), y + 20], fill="black")
         draw.text((x + 6, y + 4), label, fill="white")
 
-    out = d.parent / "contact_sheet.png"
+    out = d.parent / (f"contact_sheet_{tag}.png" if tag else "contact_sheet.png")
     sheet.save(out)
     print(f"OK -> {out}  ({len(pngs)} frames, {cols}x{rows} grid)")
 

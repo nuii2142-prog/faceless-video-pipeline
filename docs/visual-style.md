@@ -1,9 +1,47 @@
-# Visual Style — Faceless Shorts (thin-line stickman doodle)
+# Visual Style — Faceless Shorts (Soil & Signal identity, thin-line doodle)
 
 Locked style for EVERY image in a clip, so the whole video looks consistent.
+**Updated 2026-07-09** — "Soil & Signal identity" overhaul: the world is now explicitly rural
+Thailand, the character gets a signature woven farmer hat (งอบ), and one reserved amber-gold
+accent encodes the channel name into every frame. Goal: turn "consistent" into "recognizable" —
+a viewer should know whose frame this is before any text appears.
+
+## 🇹🇭 The identity system (v4, 2026-07-09 — content moved OUT of BASE_STYLE)
+
+**The architecture rule that everything else hangs on: BASE_STYLE says HOW to draw (line, palette,
+fill); each beat's `visual` says WHAT to draw (setting, props, camera).** v3.x put the world-cues
+menu in BASE_STYLE and cfg-1 stamped the same road/jar/banana composition onto every frame —
+including bedroom and laptop scenes (Nuay's exact complaint). Same failure class as the stray
+gold digits. Content nouns in an every-frame block WILL appear in every frame.
+
+| Element | Rule | What it buys |
+|---|---|---|
+| **Soil** (world) | Every place beat names ONE setting from the location menu below (drawn from Nuay's real farm photos in `farm view Ref/`) — the setting must MATCH the line's meaning: sleep happens in the room, work at the under-house table, harvest in the rows. | Frames tied to the real 30 rai, and the setting varies because the story moves, not because props got shuffled. |
+| **Signal** (accent) | ONE reserved accent: deep warm **amber-gold** — the sun and dawn glow; stat beats write "large deep amber-gold number NN%" into their own `visual`. ⚠️ Never put a draw-the-number instruction in BASE_STYLE (v3/v3.1 tests: stray gold digit on nearly every frame). | Stat frames become brand-recognizable. The name "Soil & Signal" is literally in the palette. |
+| **Character** | Same white blob + signature **conical woven farmer hat**: worn outdoors/working, resting beside him indoors — present in every character frame. | A silhouette that is OURS. A cone is trivial geometry for a turbo model, so consistency holds. |
+| **Horizon** | Farm wide shots end in **low forested hills** (the real valley) or a wall of trees — NEVER a city skyline. A city skyline appears ONLY in city/contrast beats, where it IS the point. | Kills the odd "Bangkok behind the paddies" clash; hills become a recognizable backdrop. |
+
+### 📍 Location menu (from `farm view Ref/` — pick per beat, match the meaning)
+- **Plowed beds** — freshly turned DARK soil beds, a banana clump at the edge, wall of dense trees behind.
+- **Vegetable rows** — low green rows with thin drip-irrigation lines, straw mulch, simple bamboo trellis fences (climbing beans).
+- **Sprinkler dawn** ⭐ signature — arcs of fine water mist over the rows, backlit amber by the rising sun, hills behind.
+- **Rice paddy** — flooded paddy with young seedlings in neat rows, hills on the horizon.
+- **Yellow cover-crop field** — a whole field of small yellow flowers (sunn hemp), hills behind.
+- **Stilt house** — wooden house with corrugated roof half-hidden by big trees and bamboo; grassy two-track path curving in; a farm dog somewhere.
+- **Under-house workspace** — the open-air space beneath the stilt house: wooden table, plastic chairs, baskets, hand tools.
+- **Interior room** — plain wooden room: plank walls AND floor visible, woven sleeping mat, one window with a thin curtain. Interiors stay interiors.
+- **Village lane** — small CONCRETE lane beside a tall banana grove, power poles and sagging wires, morning light.
+- **Farm dog** — allowed as a small recurring life detail in any outdoor beat.
+
+### 🎥 Camera menu (vary per beat — this is what kills the "same frame, swapped props" look)
+wide establishing · medium action · close-up on hands/object · extreme close-up face ·
+**overhead top-down (the plots as a quilt — great for scale/"30 rai" beats)** · POV (viewer's own
+hands) · low angle looking up · over-the-shoulder. Consecutive beats must change SETTING or
+CAMERA TIER (ideally both); no setting appears more than ~3 times per short unless it's a
+planned callback.
+
 **Updated 2026-06-28** after a 3-model A/B/C test (krea2 / flux2 / z-image). The thin-line
-direction below is the current house style; the old thick-marker block is kept at the bottom
-as history.
+direction below is the current house style; superseded blocks are kept at the bottom as history.
 
 ---
 
@@ -22,20 +60,20 @@ as history.
 The style is SPLIT so non-character scenes don't get a stick figure drawn into them.
 Both blocks live in `scripts/comfy_run.py` (single source) and are imported by the batch/test scripts.
 
-**`BASE_STYLE` — appended to EVERY scene (never mentions a person):**
-> Minimalist hand-drawn doodle drawn with THIN, fine, clean black pen lines — light and delicate, even
-> single-stroke weight, NOT thick, NOT heavy, NOT marker (keep this exact line style). Use a FEW soft, gentle,
-> muted flat colors as light accents (soft green, warm tan, gentle sky-blue, soft yellow) — calm and subtle,
-> never saturated, never busy; keep the image mostly white and airy. Flat fills only — absolutely NO shading,
-> NO gradient, NO drop shadow, NO paper texture. When the scene shows a place or a person, add a FEW small,
-> light supporting details that hint at the surroundings and help tell the story (a couple of small plants, a
-> little sun, a few soft ground or horizon lines) — gentle, sparse, uncluttered. For a plain object, icon, or
-> number, keep it clean and simple with little or no background. Compose the subject at a comfortable
-> MEDIUM-LARGE size, well-proportioned and balanced, kept fully inside a safe area so nothing touches the edges.
-> Clean, childlike, calm, low-to-medium detail. 16:9 landscape composition.
+**`BASE_STYLE` — appended to EVERY scene (never mentions a person). Current text lives in
+`scripts/comfy_run.py`; the load-bearing parts:**
+> Thin clean black pen lines (NOT thick/heavy/marker) · the story's world is RURAL THAILAND at first
+> light (place scenes get 1-2 Thai countryside cues; city scenes read as a busy modern Thai city) ·
+> palette = tropical greens (yellow-green → banana-leaf), warm red-brown earth/terracotta, soft cream,
+> pale peach-to-blue dawn sky + low flat mist band · ONE reserved accent = deep warm AMBER-GOLD (sun +
+> dawn glow only in the every-frame sentence) · flat fills, NO shading/gradient/shadow/texture · place
+> scenes FILL the frame, lived-in, no big blank white areas · object/icon/stat beats = clean and
+> simple, little or no background (the amber-gold number treatment is written into each stat beat's
+> `visual`, NOT here) · subject MEDIUM-LARGE inside a safe area · 16:9 landscape composition
+> (batch flag flips to 9:16).
 
-> Color/detail level locked at "subtle" (Nuay 2026-06-28): thin lines kept, character stays plain WHITE
-> (color goes into environments/objects only), rich-ish landscapes + simple character is the intended contrast.
+> Character stays plain WHITE (color goes into environments/objects only) — rich-ish Thai landscape +
+> simple white character is the intended contrast.
 > Batch flags: `batch_zturbo.py <slug> [--only 5,7,8] [--tag test]` (`--tag` writes to `frames_<tag>/` for A/B style tests; `--only` to re-roll specific scenes).
 
 **`CHARACTER_STYLE` — appended ONLY when `shot_type == "CHARACTER"` (pins one consistent character):**
@@ -43,7 +81,10 @@ Both blocks live in `scripts/comfy_run.py` (single source) and are imported by t
 > minimal face (two small black dot eyes, thin eyebrows, one small curved mouth), and a simple slim body with a
 > clean thin OUTLINE — a narrow rounded torso with thin outlined arms and thin outlined legs (a soft cartoon
 > stick figure with a lightly outlined body, NOT a single bare line, NOT a filled silhouette).
-> Always the same head, same body shape, same thin even line weight.
+> **His signature: a simple wide CONICAL woven bamboo farmer hat in pale straw-tan — worn on his head in
+> outdoor and working scenes, resting beside him or slung on his back in indoor and resting scenes; the
+> SAME hat appears with him in every image.**
+> Always the same head, same body shape, same hat, same thin even line weight.
 
 ---
 
@@ -86,8 +127,34 @@ when the caption is a statistic. Symbols (`?`, `=`, `X`, `%`, arrow) render fine
   number in post. A distant/prominent human in an ATMOSPHERE beat can also drift realistic; if a beat
   needs a clear figure, mark it CHARACTER so it gets the pinned doodle style.
 - Occasional faint texture/grass squiggles in landscapes — acceptable at video speed.
+- **Any draw-instruction in BASE_STYLE fires on EVERY frame** (cfg 1 = no conditionals). Both
+  "amber-gold for…numbers" (accent sentence) and "for a statistic beat, draw the number LARGE…"
+  (a 'conditional' sentence) stamped a random gold digit on nearly every test frame (2026-07-09,
+  v3 + v3.1). The passive old sentence "for a plain object, icon, number or stat card, keep it
+  clean…" does NOT leak — describing how to treat a thing is safe, commanding that a thing be
+  drawn is not. Brand treatment for stat numbers therefore lives in the per-beat `visual` text
+  (SKILL.md B3), never in BASE_STYLE.
+- **Isolated body parts fail.** A "feet only" beat rendered as a white mound, then as two puppies
+  (v4 tests). For a body-part beat, keep the whole character in frame and pose him instead (e.g.
+  "bending forward, head down, looking at his own bare feet") — the pinned character + pose reads
+  the same meaning and never breaks.
+- **Dark scenes render bright by default** (the warm dawn palette pulls everything to morning).
+  For night/pre-dawn beats spell it out: "night scene, deep dark navy-blue, black silhouettes,
+  faint moonlight, only a pale glow at the horizon" — that phrasing worked (v4 scenes 1, 18, 30).
+- **City beats fight the rural default.** BASE_STYLE grounds place scenes in countryside cues, so a
+  "city buildings behind" prompt comes out as paddies with a skyline. For a real city beat, write the
+  visual as "in the middle of a dense modern Thai city street, tall buildings on every side, no
+  fields" — surround the figure with the city so the rural default has nowhere to land.
 
 ---
+
+## History — why the generic-countryside style was replaced (2026-07-09)
+- The 2026-06-28 "lively" style was consistent but **placeless** — contact sheets read as generic
+  Western meadow (could be Iowa), while the brand is a Thai organic farmer on 30 rai. Backgrounds
+  now carry Thai cues, the character carries the hat, and amber-gold is reserved as the signature
+  accent. Same thin-line/flat-fill mechanics, so all 2026-06-28 model findings still apply.
+- The "morning-before-the-sun-short" contact sheet also showed 5 near-identical "character stands
+  in a field" wide shots in the back third → repetition guard hardened in SKILL.md B3b.
 
 ## History — why the previous direction was replaced (2026-06-28)
 - **krea2-turbo (thick marker)**: cfg 1 → negatives inert → shadows/texture crept in; strong big-figure bias;
