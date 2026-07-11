@@ -61,29 +61,30 @@ direction below is the current house style; superseded blocks are kept at the bo
 The style is SPLIT so non-character scenes don't get a stick figure drawn into them.
 Both blocks live in `scripts/comfy_run.py` (single source) and are imported by the batch/test scripts.
 
-**`BASE_STYLE` — appended to EVERY scene (never mentions a person). Current text lives in
-`scripts/comfy_run.py`; the load-bearing parts:**
-> Thin clean black pen lines (NOT thick/heavy/marker) · the story's world is RURAL THAILAND at first
-> light (place scenes get 1-2 Thai countryside cues; city scenes read as a busy modern Thai city) ·
-> palette = tropical greens (yellow-green → banana-leaf), warm red-brown earth/terracotta, soft cream,
-> pale peach-to-blue dawn sky · ONE reserved accent = deep warm AMBER-GOLD (sun + dawn glow only in
-> the every-frame sentence) · **one soft light source per scene with gentle two-tone CEL shading**
-> (flat poster shapes; still NO airbrush gradients, NO fuzzy shadows, NO 3d, NO paper texture — grain
-> comes from the grade pass) · a FEW well-chosen supporting details, then let the frame BREATHE
-> (calm open areas; backgrounds muted/hazy so the white character is always the brightest thing) ·
-> object/icon/stat beats = clean and simple, little or no background (the amber-gold number treatment
-> is written into each stat beat's `visual`, NOT here) · subject MEDIUM-LARGE inside a safe area ·
-> 16:9 landscape composition (batch flag flips to 9:16).
+**`BASE_STYLE` — appended to EVERY scene (never mentions a person, never names a place). Current
+text lives in `scripts/comfy_run.py:23-47`; the load-bearing parts:**
+> Thin clean black pen lines (NOT thick/heavy/marker) · palette = tropical greens (yellow-green →
+> banana-leaf), dark soil brown, warm terracotta, straw-tan, soft cream, pale peach-to-blue dawn
+> sky · ONE reserved accent = deep warm AMBER-GOLD (sun + dawn glow only in the every-frame
+> sentence) · **one soft light source per scene with gentle two-tone CEL shading** (flat poster
+> shapes; NO airbrush gradients, NO fuzzy shadows, NO 3d, NO paper texture — grain comes from the
+> grade pass) · a FEW well-chosen supporting details that belong to THAT place, then let the frame
+> BREATHE (calm open areas; backgrounds muted/hazy so the white character is always the brightest
+> thing) · object/icon/stat beats = clean and simple, little or no background (the amber-gold
+> number treatment is written into each stat beat's `visual`, NOT here) · subject MEDIUM-LARGE
+> inside a safe area · 16:9 landscape composition (batch flag flips to 9:16).
+
+> ⚠️ **BASE_STYLE carries HOW to draw, zero WHERE (v4, 2026-07-09).** "Rural Thailand", the farm,
+> the hills — all location/scene content comes from EACH BEAT's `visual` (setting + camera menus
+> below). If a beat's visual doesn't say where we are, the model invents a generic frame — that is
+> the beat's bug, not BASE_STYLE's job to fix.
 
 > Character stays plain WHITE (color goes into environments/objects only) — rich-ish Thai landscape +
 > simple white character is the intended contrast.
 > Batch flags: `batch_zturbo.py <slug> [--only 5,7,8] [--tag test]` (`--tag` writes to `frames_<tag>/` for A/B style tests; `--only` to re-roll specific scenes).
 
-**`CHARACTER_STYLE` — appended ONLY when `shot_type == "CHARACTER"` (pins one consistent character):**
-> The person is ALWAYS the exact same character, drawn identically in every image: a round WHITE head with a
-> minimal face (two small black dot eyes, thin eyebrows, one small curved mouth), and a simple slim body with a
-> clean thin OUTLINE — a narrow rounded torso with thin outlined arms and thin outlined legs (a soft cartoon
-> stick figure with a lightly outlined body, NOT a single bare line, NOT a filled silhouette).
+**`CHARACTER_STYLE` — appended ONLY when `shot_type == "CHARACTER"` (pins one consistent character).
+Current text lives in `scripts/comfy_run.py:52-69`:**
 > **Cute round big-head chibi (locked 2026-07-11):** a LARGE round white head with a soft, slightly
 > UNEVEN hand-drawn roundness (NOT a perfect circle — the little wobble is the cuteness), a SMALL soft
 > ROUNDED body (short, a little chubby, huggable — NOT tall, NOT lanky, NOT slim/grown-up), and a

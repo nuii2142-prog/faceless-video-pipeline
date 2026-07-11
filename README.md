@@ -46,7 +46,9 @@ Full walkthrough: [`docs/WORKFLOW.md`](docs/WORKFLOW.md).
 - **One consistent character** — pinned description + fixed seed keep the same doodle figure
   across the whole video.
 - **Voice + motion polish** — `clean_voice.py` (denoise + loudness-normalize a real-mic take or
-  TTS output), `f5_speak.py` (local F5-TTS voice cloning), and `assemble_clip.py --ken-burns`
+  TTS output), `f5_speak.py` (local F5-TTS voice cloning — kept as emergency fallback only; the
+  publishing voice is the creator's own recording or an ElevenLabs Professional Voice Clone of it),
+  `grade_frames.py` (the "Soil & Signal dawn" house color grade), and `assemble_clip.py --ken-burns`
   (smooth supersampled slow-zoom, rendered in parallel — a long clip assembles in minutes).
 
 ## Tech stack

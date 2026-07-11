@@ -1,6 +1,6 @@
 # Soil & Signal — Faceless Video Pipeline (working manual)
 
-Last updated 2026-06-28. This is the full, repeatable process for turning a topic into a
+Last updated 2026-07-11. This is the full, repeatable process for turning a topic into a
 finished 16:9 YouTube video in the thin-line doodle style.
 
 ---
@@ -34,8 +34,8 @@ Everything heavy (images, voice) runs **locally / free**. Claude is only the orc
      ├─ <audio>.mp3                   (you drop this in)
      ├─ words.json / scenes.json      (Whisper; phrases = caption cues)
      ├─ scene_prompts.json            (image prompts, 1 per BEAT — "covers" groups phrases)
-     ├─ corrections.json              (Whisper mishears → caption fixes, per project)
      ├─ frames/scene_NN.png           (generated images)
+     ├─ frames_graded/scene_NN.png    (after grade_frames.py — the published look)
      ├─ contact_sheet.png             (all frames tiled, for the human pass)
      ├─ <slug>.srt                    (subtitles)
      └─ final.mp4
@@ -76,7 +76,8 @@ ml-env\Scripts\python.exe scripts\whisper_phrases.py "output\<slug>\<audio>.mp3"
 `{"scene": N, "covers": [N, N+1], "phrase": "...", "shot_type": "CHARACTER|B-ROLL|ATMOSPHERE", "visual": "..."}`
 - The method (meaning-first devices, anti-icon-slop, motif planning, the human check before
   generating) lives in `skills/script-breakdown/SKILL.md` B2-B3b. Style rules: `docs/visual-style.md`.
-- Style is auto-appended; don't put style in `visual`. Whisper mishears go into `corrections.json`.
+- Style is auto-appended; don't put style in `visual`. (No corrections file needed — captions are
+  built from `script.txt` directly, see 3.4.)
 
 **3.3 Generate images (z-image-turbo, ~26 s/img → ~1h for a long clip):**
 ```
@@ -99,17 +100,28 @@ re-roll the misses with `--only`.
 ```
 python scripts\make_srt.py <slug>
 ```
-→ `output/<slug>/<slug>.srt` (upload separately to YouTube; not burned in). Applies
-`corrections.json` (per-project Whisper fixes) + a few generic spacing tidy-ups.
+→ `output/<slug>/<slug>.srt` (upload separately to YouTube; not burned in). Builds captions by
+aligning `script.txt` to fresh large-v3 WORD timings (difflib) — the .srt text is always the true
+script, so Whisper mishears can't reach the captions. No corrections file exists or is needed.
+
+**3.45 Color grade (every published frame goes through this):**
+```
+ml-env\Scripts\python.exe scripts\grade_frames.py <slug>
+```
+→ `frames_graded/` — the "Soil & Signal dawn" house grade + paper grain. Run AFTER the contact-sheet
+human pass; re-run after any re-roll. Assembly then uses `--frames-dir frames_graded`.
 
 **3.5 Assemble:**
 ```
-python scripts\assemble_clip.py <slug> --landscape --ken-burns --music "SFX\<track>.mp3"
+python scripts\assemble_clip.py <slug> --frames-dir frames_graded --landscape --ken-burns --music "SFX\<track>.mp3"
 ```
-- `--landscape` = 1920×1080 (drop it for 9:16 Shorts).
+- `--landscape` = 1920×1080. ⚠️ **Omitting it silently defaults to 9:16 portrait** (1080×1920) —
+  fine for Shorts, wrong for long-form. Always pass it for 16:9.
 - `--ken-burns` = slow breathing zoom on every beat; renders in parallel (`--jobs`, default ~6),
   a long clip finishes in minutes.
-- `--music` = optional; loops + mixes under the voice (`--music-vol`, default 12%).
+- `--music` = optional; loops + mixes under the voice (`--music-vol`, default **7%** = `MUSIC_VOL`).
+  Prefer melody-free ambient/pad beds. Pick from SFX/ with `scripts\music_pick.py`, or generate a
+  zero-Content-ID bed with `scripts\gen_music.py <out.mp3>` (ACE-Step; `--seconds/--seed/--bpm/--tags`).
 
 ---
 
@@ -136,6 +148,7 @@ Workflow files + node maps are in `scripts/model_test.py`. To compare models aga
 
 ## 6. Upload (per video)
 1. `output/<slug>/UPLOAD.md` has the paste-ready Title / Description / Tags / settings.
+   (Written by hand/Claude per video — no script generates it; same for `thumbnail_prompt.txt`.)
 2. Upload `final.mp4`, then upload the `.srt` under Subtitles.
 3. Thumbnail: z-turbo base (`thumbnail_prompt.txt`) → add big text in Canva.
 
@@ -148,11 +161,12 @@ Workflow files + node maps are in `scripts/model_test.py`. To compare models aga
 
 # Phase B (after you drop the audio in output/<slug>/)
 ml-env\Scripts\python.exe scripts\whisper_phrases.py "output\<slug>\<audio>.mp3" <slug>
-#   (Claude groups beats + writes scene_prompts.json + corrections.json, shows you the plan)
+#   (Claude groups beats + writes scene_prompts.json, shows you the plan — human gate)
 python scripts\batch_zturbo.py <slug>
 ml-env\Scripts\python.exe scripts\contact_sheet.py <slug>    # eyeball all frames
+ml-env\Scripts\python.exe scripts\grade_frames.py <slug>     # house grade → frames_graded/
 python scripts\make_srt.py <slug>
-python scripts\assemble_clip.py <slug> --landscape --ken-burns --music "SFX\<track>.mp3"
+python scripts\assemble_clip.py <slug> --frames-dir frames_graded --landscape --ken-burns --music "SFX\<track>.mp3"
 
 # Re-roll one scene
 python scripts\batch_zturbo.py <slug> --only <N> --seed <new>

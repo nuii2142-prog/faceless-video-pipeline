@@ -11,7 +11,8 @@ reverse-engineered **Zen format**, shaped by **HEIGHT as a whole-clip arc** (not
 ```
 PHASE A  (this skill, first run)         PHASE B  (after Nuay returns audio)
 ─────────────────────────────────       ─────────────────────────────────────
-topic → research → write narration       audio → Whisper timestamps (phrases = captions)
+topic → INTERVIEW Nuay → research         audio → Whisper timestamps (phrases = captions)
+      → write narration
       → save script.txt/json                   → group phrases into VISUAL BEATS
       → STOP. hand off to Nuay.                → 1 meaning-first image prompt per BEAT
         (he records the voice)                 → human check → ComfyUI batch → contact sheet → assemble
@@ -49,6 +50,26 @@ adjust the working directory — everything else is portable.)
 - If the argument ends in `.md`, Read it (Thai is fine). Otherwise treat the string as the topic.
 - Parse `--length` (default `short`) and `--research` (default `light`; `deep` if length=long and unset).
 
+## A1b — INTERVIEW Nuay (ALWAYS, before research or writing — any topic)
+The script's moat is Nuay's real life; an interview is how it gets into the script instead of
+generic filler. Ask ONE compact message (Thai, numbered, answerable in fragments), tuned to the
+topic — these five slots, skip any that the input already answered:
+
+1. **เรื่องจริงของพี่** — ประสบการณ์ตรง/โมเมนต์จริงกับหัวข้อนี้? (ขอ 1 ภาพที่เห็น/ได้ยิน/รู้สึกจริง เช่น
+   "เช้านั้นฝนเพิ่งหยุด มือยังเปื้อนดิน")
+2. **ข้อมูลที่พี่มี** — ตัวเลข/ข้อเท็จจริง/แหล่งที่พี่มีอยู่แล้วอยากใส่ไหม?
+3. **ให้ผมวิจัยไหม** — none / light (1 สถิติ) / deep (2-3 สถิติ)? (ถ้าไม่ตอบ ใช้ค่าจาก `--research`)
+4. **คนดูควรได้อะไรกลับไป** — ความรู้สึก/ข้อคิดเดียวที่อยากให้ติดตัวไป?
+5. **ภาพ/สถานที่จริง** — มุมไหนของไร่/ชีวิตจริงที่อยากให้ปรากฏ? (ผูกกับ `farm view Ref/` ถ้ามี)
+
+Rules:
+- Nuay answers กระชับได้ ("ข้าม" = ใช้วิจารณญาณของโมเดล) — never block on a skipped slot.
+- ถ้า Nuay สั่ง "วิจัยให้เลย" ในคำตอบ → treat as research directive for A3.
+- **Topic-agnostic:** the 5 slots work for farm, mindfulness, coding, or any future topic — only the
+  wording of the examples adapts. For non-farm topics, slot 5 becomes "ภาพจริงจากชีวิตช่วงนั้น".
+- Save the answers verbatim (Thai OK) into `script.json` → `"interview": {...}` (A8). The lived
+  scene in A4 MUST come from slot 1/5 material when given — never invent a scene Nuay didn't live.
+
 ## A2 — Load references
 - Read `docs/format-spec.md` — the Zen format (hook 4-beats / 3 pillars / transitions / authority / close).
 - **Persona (first person — this IS Nuay, not a character):** wakes before sunrise to tend vegetables
@@ -66,20 +87,44 @@ adjust the working directory — everything else is portable.)
 Continuous spoken English — NO beat labels, NO stage directions, NO scene numbers in the text.
 HEIGHT is the emotional arc of the WHOLE piece, blended with `format-spec.md`:
 
-**short (~90s):** Hook (4-beat, compressed: immersive 2nd-person moment → contrarian pivot →
-central question → one-line promise) → core idea + the real stat (authority) → ONE sensory scene
-from Nuay's real life → quiet takeaway + **callback to the opening image**.
+**short (≤60s HARD CAP — aim 40-55s):** the 2026 Shorts algorithm ranks by absolute watch time
+(swipe rate retired); sub-15s clips collapsed, 30-45s is the platform sweet spot, and Nuay caps at
+60s. Retention target ≈70%+. Structure = Hook → 1 authority stat → ONE sensory scene from Nuay's
+real life → quiet takeaway + **callback to the opening image** — but rotate the ORDER via the
+structure wheel below.
 
-> **Hook A/B (Shorts only — decided by data, not taste):** alternate the opener across consecutive
-> Shorts. **atmosphere-first** = the immersive 2nd-person moment as written above. **stat-first** =
-> cold-open on the strongest real number in one blunt line ("97% of day traders lose money. I was
-> one of them."), THEN drop into the immersive moment — same Zen body, only the first ~6s differ.
-> Record the variant in `script.json` (`"hook_variant": "atmosphere" | "stat"`) and compare
-> 10-second retention in Analytics after a few of each. When one clearly wins, make it the default
-> and retire this note.
+> **⚙️ VARIATION WHEELS (Shorts — anti-repetition, 2026).** YouTube now runs an Anti-Repetitive
+> Content AI: recycling the same hook/format/visual style across consecutive uploads gets
+> suppressed. The DNA never changes (Zen voice · real cited stat · Nuay's real lived scene ·
+> callback close · calm tone). What rotates is the surface. **Before writing, read the last 1-2
+> `output/*/script.json` and pick variants that differ from the previous Short.**
+>
+> **Hook wheel (first ~5s — never repeat the previous Short's pick):**
+> 1. `atmosphere` — immersive 2nd-person moment ("Tonight, when the sun goes down…")
+> 2. `stat` — cold-open the strongest number, blunt ("97% of day traders lose money. I was one of them.")
+> 3. `result` — show the END state first, then rewind ("This basket feeds twenty families. It started as a debt.")
+> 4. `claim` — bold contrarian one-liner ("Weeding made me faster. Because it made me slower.")
+> 5. `you` — direct address that names the viewer ("If you check your phone before your feet touch the floor…")
+>
+> **Structure wheel (body order — differ from the previous Short):**
+> - `S1 classic` — hook → stat (authority) → lived scene → takeaway + callback
+> - `S2 story-first` — hook → lived scene → the stat lands as the twist → takeaway + callback
+> - `S3 question-loop` — hook opens a question → mini-scene → stat → the answer IS the callback
+>
+> Record both in `script.json` (`"hook_variant"`, `"structure_variant"`). Compare 10-second
+> retention in Analytics; when a wheel position clearly wins, weight it more often — but never
+> run the same combo twice in a row (the wheel exists for the algorithm, not for taste).
 
 **long (~8 min):** Hook (4 beats) → **3 pillars** (each: transition sentence → real anchor → a
 Nuay-life illustration → one memorable line) → close (reframe + 3-beat recap + callback).
+
+> **Long-form variation (lighter touch — the 3-pillar engine IS the strength, keep it):**
+> - Hook beat B1 opener imagery must differ from the previous long-form's B1 (check the last
+>   long `script.json`); the hook wheel above can seed B1's flavor.
+> - Transition sentences: never reuse the same bridge twice within one video, and don't open
+>   two consecutive videos' pillars with the identical stock phrase — paraphrase in Zen voice.
+> - Pillar order: when the material allows, vary which pillar type leads (history-first vs
+>   science-first vs personal-first). Record `"structure_variant": "P-history|P-science|P-personal"`.
 
 Personal experience = the heart; the researched stat(s) = the authority. Short declarative sentences,
 second person where it fits, present tense, calm/awe-building, no emojis.
@@ -116,8 +161,10 @@ heightening — do not strip it flat. Cut the tells, keep the voice.
 as something Nuay would actually say standing in a field at 5am.
 
 ## A5 — Length check
-Count words. short: warn if <170 or >260. long: warn if <1000 or >1600.
-est_duration_sec = round(words / 2.5). Show the warning and wait if triggered.
+Count words. **short: warn if <90 or >140** (Nuay's slow VO ≈130 wpm ⇒ 140 words ≈ 60s hard cap;
+aim 100-125 words = 45-55s). long: warn if <1000 or >1600.
+est_duration_sec = round(words / 2.2) (calibrated to the ~130 wpm delivery, not fast TTS).
+Show the warning and wait if triggered.
 > Nuay may cap length for TTS-credit reasons — honor an explicit word target over these defaults.
 
 ## A6 — Display the NARRATION ONLY (no breakdown here)
@@ -141,6 +188,9 @@ Real source(s): <citation(s)>
   "slug": "...", "topic": "...", "length_mode": "short|long", "research_level": "none|light|deep",
   "narration": "...",
   "sources": ["researcher, year, institution — the real stat"],
+  "interview": { "story": "...", "own_data": "...", "research_wanted": "...", "takeaway": "...", "real_place": "..." },
+  "hook_variant": "atmosphere|stat|result|claim|you",
+  "structure_variant": "S1|S2|S3 (short) or P-history|P-science|P-personal (long)",
   "word_count": 0, "est_duration_sec": 0
 }
 ```
@@ -201,8 +251,8 @@ Read `scenes.json` and group **consecutive** phrases into beats:
   laptop…"). Never merge across a section turn (hook→pillar, pillar→pillar, →close).
 - A strong phrase stands alone: a stat reveal, a punchline, the central question — give each its
   own beat even if short. Emphasis = a cut.
-- Sanity: a 10-min clip should land around **100-140 beats** (~half the phrase count); a 90s Short
-  around **20-30**.
+- Sanity: a 10-min clip should land around **100-140 beats** (~half the phrase count); a ≤60s
+  Short around **14-22**.
 
 ## B3 — One image prompt per beat → `scene_prompts.json`
 Read `docs/visual-style.md` (locked style) first. Then, before writing any prompt:
@@ -285,7 +335,11 @@ Scan the finished list once, as a reviewer:
 2. Three+ consecutive beats with the same device or shot_type? Break the run.
 3. Any beat that fails the sound-off test? Rewrite it — that one WILL read as "AI slop" on screen.
 4. Icon-pairs over ~10%? Convert the weakest into literal action / place / character beats.
-5. **Standing-wide budget: max 2 "character stands/walks in a field, full body, wide" beats per
+5. **Cross-clip opening check (anti-repetition, 2026):** read the PREVIOUS clip's
+   `scene_prompts.json` first beat — this clip's opening visual must differ in at least two of
+   {setting, camera, subject}. The algorithm's repetition detector sees the first frames of
+   consecutive uploads; identical openers read as a template channel.
+6. **Standing-wide budget: max 2 "character stands/walks in a field, full body, wide" beats per
    clip** (morning-before-the-sun-short shipped 5 — the whole back third looked identical at
    video speed). Consecutive CHARACTER beats must change at least TWO of {camera distance,
    angle, action/prop}: wide walking → close-up on hands in the soil → over-shoulder at the

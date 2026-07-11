@@ -79,12 +79,12 @@ Real examples of the "evidence" anchors in this clip:
 
 ## 6. Length variants (THE decision that drives everything)
 
-| | Long-form (Zen native) | Short (90s) |
+| | Long-form (Zen native) | Short (≤60s hard cap) |
 |---|---|---|
-| Length | ~8 min · ~1,300 words | ~90 s · ~200–230 words |
-| Structure | Hook (4 beats) + **3 pillars** + close | Hook (4 beats, compressed) + **1 pillar** (1 study + 1 lived scene) + callback close |
+| Length | ~8 min · ~1,300 words | 40–55 s (cap 60) · ~100–140 words |
+| Structure | Hook (4 beats) + **3 pillars** + close | Hook (from the hook wheel) + **1 pillar** (1 study + 1 lived scene) + callback close — body order rotates via the structure wheel (SKILL A4) |
 | Aspect | 16:9 landscape | 9:16 vertical |
-| Images | ~50–90 (1 per phrase) | ~30–50 (1 per phrase) |
+| Images | ~50–90 (1 per phrase) | ~14–22 beats |
 | Money | **Earns watch-hours → real YouTube monetization (what makes Zen $11.7K/mo)** | Subscriber funnel; Shorts RPM is low |
 | Effort/clip | High | Low — good for validating the pipeline first |
 
