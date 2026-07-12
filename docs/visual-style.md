@@ -22,16 +22,28 @@ gold digits. Content nouns in an every-frame block WILL appear in every frame.
 | **Hat = story prop** | The conical farmer hat is NOT always on. It appears in farmer beats (waking as himself, returning to the soil, parents, lifting it, home) and comes OFF during the city/chasing-money beats (leaving the farm, direct-sales, trading, "I was ordinary", night rest). | The hat leaving and returning tracks his identity arc — a detail viewers feel without naming. Also fixes "hat on every frame" monotony. |
 | **Horizon** | Farm wide shots end in **low forested hills** (the real valley) or a wall of trees — NEVER a city skyline. A city skyline appears ONLY in city/contrast beats, where it IS the point. | Kills the odd "Bangkok behind the paddies" clash; hills become a recognizable backdrop. |
 
-### 📍 Location menu (from `farm view Ref/` — pick per beat, match the meaning)
+### 📍 Location menu (from `farm view Ref/` + Nuay's own photos in `output/*/My farm/` — pick per
+beat, match the meaning. Elements below marked "(real, 2026-07-13)" are confirmed from his actual
+photos and render-tested well — use them as the channel's recognizable signature, not generic farm cues.
 - **Plowed beds** — freshly turned DARK soil beds, a banana clump at the edge, wall of dense trees behind.
-- **Vegetable rows** — low green rows with thin drip-irrigation lines, straw mulch, simple bamboo trellis fences (climbing beans).
+- **Vegetable rows** — low green rows with thin blue drip-irrigation pipe, straw or dark plastic mulch,
+  **bamboo A-frame trellises** with climbing gourd/bean vines (real, 2026-07-13).
 - **Sprinkler dawn** ⭐ signature — arcs of fine water mist over the rows, backlit amber by the rising sun, hills behind.
 - **Rice paddy** — flooded paddy with young seedlings in neat rows, hills on the horizon.
 - **Yellow cover-crop field** — a whole field of small yellow flowers (sunn hemp), hills behind.
-- **Stilt house** — wooden house with corrugated roof half-hidden by big trees and bamboo; grassy two-track path curving in; a farm dog somewhere.
-- **Under-house workspace** — the open-air space beneath the stilt house: wooden table, plastic chairs, baskets, hand tools.
+- **Stilt house / family home** — a low wooden house with a **GREEN corrugated roof** half-hidden by
+  big trees and bamboo, a **banana grove + coconut palms together** (not banana alone) beside it, a
+  concrete fence + gate, a small **golden spirit-house shrine** (ศาลพระภูมิ) near the entrance, and
+  **forested hills close behind** — the real valley, never a city skyline (real, 2026-07-13). A farm
+  dog and a grassy two-track path curving in are welcome details.
+- **Under-house / open barn workspace** — an open wooden barn roof over a wooden table, plastic
+  chairs, baskets, hand tools, bicycles, and an **orange KUBOTA tractor** parked to one side (real,
+  2026-07-13).
 - **Interior room** — plain wooden room: plank walls AND floor visible, woven sleeping mat, one window with a thin curtain. Interiors stay interiors.
-- **Village lane** — small CONCRETE lane beside a tall banana grove, power poles and sagging wires, morning light.
+- **Village lane** — a pale CONCRETE lane beside a tall banana grove **and a few coconut palms**,
+  leaning power poles with sagging wires, a distant green-roofed house or hills ahead, morning light.
+- **Water-tank path** — where the concrete lane gives way to a warm dirt two-track path, a round
+  concrete water tank beside the path, leafy trees leaning over from both sides (real, 2026-07-13).
 - **Farm dog** — allowed as a small recurring life detail in any outdoor beat.
 
 ### 🎥 Camera menu (vary per beat — this is what kills the "same frame, swapped props" look)
@@ -53,6 +65,11 @@ direction below is the current house style; superseded blocks are kept at the bo
 - ~26 s/img on the RTX 5070 → ~27 min for a 62-image clip (the only model fast enough for full clips).
 - Driver: `scripts/batch_zturbo.py <slug>` (reads `scene_prompts.json`, applies the split style below, fixed seed 42).
 - **flux2-dev / flux2-turbo** = beautiful but ~3 min / ~2 min per image → use ONLY for one-off thumbnails.
+  ⚠️ **Not currently installed (checked 2026-07-13)** — ComfyUI's checkpoint dropdowns only offer
+  `z_image_turbo_bf16`, `acestep_v1.5_xl_turbo_bf16`, `pid_flux1_...`. `/prompt` 400s with
+  `value_not_in_list` on `flux2_dev_fp8mixed.safetensors` etc. Use z-image-turbo for thumbnails too
+  (via a throwaway `scene_prompts.json` entry + `batch_zturbo.py --only <n> --tag <name>`, then
+  remove the entry) until flux2's checkpoints are reinstalled.
 
 ---
 
@@ -64,7 +81,7 @@ Both blocks live in `scripts/comfy_run.py` (single source) and are imported by t
 **`BASE_STYLE` — appended to EVERY scene (never mentions a person, never names a place). Current
 text lives in `scripts/comfy_run.py:23-47`; the load-bearing parts:**
 > Thin clean black pen lines (NOT thick/heavy/marker) · palette = tropical greens (yellow-green →
-> banana-leaf), dark soil brown, warm terracotta, straw-tan, soft cream, pale peach-to-blue dawn
+> forest green), dark soil brown, warm terracotta, straw-tan, soft cream, pale peach-to-blue dawn
 > sky · ONE reserved accent = deep warm AMBER-GOLD (sun + dawn glow only in the every-frame
 > sentence) · **one soft light source per scene with gentle two-tone CEL shading** (flat poster
 > shapes; NO airbrush gradients, NO fuzzy shadows, NO 3d, NO paper texture — grain comes from the
@@ -139,6 +156,12 @@ when the caption is a statistic. Symbols (`?`, `=`, `X`, `%`, arrow) render fine
   number in post. A distant/prominent human in an ATMOSPHERE beat can also drift realistic; if a beat
   needs a clear figure, mark it CHARACTER so it gets the pinned doodle style.
 - Occasional faint texture/grass squiggles in landscapes — acceptable at video speed.
+- **Even a color-anchor NOUN in BASE_STYLE fires on EVERY frame.** The palette line said "deep
+  banana-leaf green" (just naming a shade) — z-turbo still drew an actual banana leaf in a frame
+  corner on non-farm beats, including interior bus scenes (found on `the-five-minute-commute`,
+  2026-07-13). Fixed to "deep forest green" — a color word with no concrete-object prior. Lesson:
+  in BASE_STYLE, avoid ANY plant/object noun even as a color reference ("sky-blue" is fine,
+  "banana-leaf-green" is not) — describing colors is safe, naming things is not.
 - **Any draw-instruction in BASE_STYLE fires on EVERY frame** (cfg 1 = no conditionals). Both
   "amber-gold for…numbers" (accent sentence) and "for a statistic beat, draw the number LARGE…"
   (a 'conditional' sentence) stamped a random gold digit on nearly every test frame (2026-07-09,

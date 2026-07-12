@@ -118,6 +118,24 @@ structure wheel below.
 **long (~8 min):** Hook (4 beats) → **3 pillars** (each: transition sentence → real anchor → a
 Nuay-life illustration → one memorable line) → close (reframe + 3-beat recap + callback).
 
+> **Hook energy — compensate for a naturally low/monotone voice (2026-07-13, Nuay's note after
+> watching `the-five-minute-commute`'s first 30s and finding it not compelling enough).** Nuay's
+> voice is genuinely deep and calm — that IS the brand — but it means the writing has to carry
+> more of the hook's pull than vocal tone alone can, or viewers drop before the payoff lands. Lean
+> the overall script voice a little more playful/curious where it naturally fits (a wry aside, an
+> unexpected juxtaposition, a small twist) — keep the calm register, just don't let it go flat.
+> Two concrete hook fixes, grounded in `docs/format-spec.md`'s own reference video (7.7M views):
+> - **Land a real number inside the hook itself, by ~0:20-0:30 — not just a question.** B3
+>   ("raise stakes") pairs the open question with ONE vivid stat in the same breath in the
+>   reference clip. `the-five-minute-commute`'s hook asked "what is that hour costing you?" but
+>   held its 40% stat back until 1:26 — past the window that decides whether someone keeps
+>   watching. Tease the sharpest number early even if its full study/context lands later in a pillar.
+> - **The hook's visual beats (Phase B) must cut faster than the body.** No single beat in the
+>   first ~30s should hold longer than ~3s — treat B2's "hook may cut faster" as a hard cap for a
+>   script this calm, not a suggestion.
+> Validate for real once a video is public: check YouTube Studio's 0:00-0:30 audience-retention
+> curve. If a hook choice measurably holds more viewers past 0:30, weight it more next time.
+>
 > **Long-form variation (lighter touch — the 3-pillar engine IS the strength, keep it):**
 > - Hook beat B1 opener imagery must differ from the previous long-form's B1 (check the last
 >   long `script.json`); the hook wheel above can seed B1's flavor.
@@ -360,7 +378,15 @@ looking at the horizon, lots of empty space) and save it as `frames/scene_end.pn
 holds THAT through the outro instead of freezing the last narration frame. Tune per clip with
 `--lead-in` / `--outro`.
 
-## B5 — Images → contact sheet → captions → assembly
+## B5 — Voice → images → contact sheet → captions → assembly
+**Voice (ElevenLabs PVC, current default, 2026-07-13): use the raw exported mp3s AS-IS.** Concat
+the PVC takes straight to `voice.wav` (ffmpeg concat, no filters) — do NOT run `clean_voice.py` on
+it. PVC audio is already studio-clean; running the denoise/highpass chain on it added a hollow/
+"boomy" artifact (confirmed on `the-five-minute-commute`, rejected by Nuay). `clean_voice.py`
+still applies to genuine self-recorded raw takes (real mic/room noise) per A9 — the distinction is
+PVC vs a physical recording, not a blanket rule. `assemble_clip.py` already applies loudnorm to
+-14 LUFS at mux time, so no separate loudness pass is needed either way. Do not reprocess the
+voice unless Nuay asks.
 ```
 ComfyUI open → python scripts\batch_zturbo.py <slug>              (add --portrait for 9:16; resumable, ETA shown)
 check        → ml-env\Scripts\python.exe scripts\contact_sheet.py <slug>
@@ -372,21 +398,28 @@ grade        → ml-env\Scripts\python.exe scripts\grade_frames.py <slug>   (AFT
 captions     → ml-env\Scripts\python.exe scripts\make_srt.py <slug>   (script-aligned to large-v3 WORD
                                                                    timings — accurate sync; sidecar .srt,
                                                                    do NOT burn in — upload in YouTube Studio)
-assemble     → python scripts\assemble_clip.py <slug> --frames-dir frames_graded [--landscape] [--ken-burns] [--music SFX\track.mp3]
+assemble     → python scripts\assemble_clip.py <slug> --frames-dir frames_graded [--landscape] [--ken-burns]
 ```
 `--ken-burns` renders scenes in parallel (`--jobs`, default ~6) — a long clip takes minutes, not
 an hour. Run it in the background and report the printed ETA.
 
-**Music: default level = 7%** (`MUSIC_VOL` in `assemble_clip.py`, override with `--music-vol`). A
-bed should not fight the narration — prefer **melody-free ambient/pad/drone** (a moving melody or
-piano competes with speech even at low volume; a static pad reads as "atmosphere", not "information").
-Generate custom beds with `scripts/gen_music.py <out.mp3>` (ACE-Step workflow; defaults to a
-melody-free ambient pad, `--seconds/--seed/--bpm/--tags` to tune) — self-generated = zero Content-ID
-risk. Cleared YouTube Audio Library tracks are the fallback.
+**Music: default = NONE (2026-07-13).** Ship voice-only unless Nuay explicitly asks for a bed —
+across `the-five-minute-commute` he walked it back 7%→5%→3%→off; the calm/mindfulness register this
+channel is built on reads better as pure narration, and silence removes a Content-ID surface
+entirely. If a video's content specifically calls for a bed, generate with `scripts/gen_music.py
+<out.mp3>` (ACE-Step workflow, melody-free ambient pad, `--seconds/--seed/--bpm/--tags`) and pass
+`--music SFX\track.mp3 --music-vol 0.03` to `assemble_clip.py` — but ask first rather than defaulting it in.
 
 ## B6 — Before upload
 Run `docs/publish-checklist.md` against the ep and report what's missing. Do not skip the last
 item (sleep guardrail) — late is better than scattered.
+
+**Platform scope by length_mode (2026-07-13) — check `script.json` before writing any SEO copy:**
+- **`length_mode: "long"` → YouTube only.** Write title/description/tags/chapters. Do NOT write
+  Shorts/Facebook/IG Reel/TikTok copy for it — those belong to the short-form cutdown, a separate
+  piece made later, not this upload.
+- **`length_mode: "short"` → full multi-platform pass:** YouTube Shorts + Facebook + IG Reel +
+  TikTok (+ a TikTok thumbnail prompt). If unsure which applies, ask rather than assume.
 
 ---
 

@@ -6,7 +6,7 @@
 [ ] ภาพทุก scene สไตล์ตรงกัน (เทียบ docs/visual-style.md + contact sheet)
 [ ] ทุกเฟรมผ่าน grade_frames.py แล้ว (house grade + grain) และ assemble ใช้ --frames-dir frames_graded
 [ ] Export ถูก ratio: 16:9 1080p (long-form) / 9:16 (Shorts)
-[ ] Audio levels ok — เสียงพูดชัด, เพลง (ถ้ามี) ไม่กลบ, ผ่าน clean_voice.py แล้ว
+[ ] Audio levels ok — เสียงพูดชัด, เพลง (ถ้ามี ปกติไม่ใส่แล้ว) ไม่กลบ, เสียง PVC ใช้ raw ไม่ผ่าน clean_voice.py
 [ ] Loudness ≈ -14 LUFS (assemble_clip.py ใส่ loudnorm อัตโนมัติแล้ว — เช็คได้:
     ffmpeg -i final.mp4 -af loudnorm=print_format=summary -f null NUL → ดู Input Integrated)
 [ ] .srt sidecar พร้อม (ไม่ burn-in) + corrections.json แก้คำ Whisper ฟังผิดครบ

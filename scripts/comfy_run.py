@@ -23,7 +23,7 @@ COMFY_OUT = pathlib.Path(os.environ.get("COMFY_OUT", r"C:\Users\Darks\ComfyUI-Sh
 BASE_STYLE = (
     "Cheerful minimalist hand-drawn doodle drawn with THIN, clean black pen lines — delicate but confident, a "
     "slightly firmer even outline on the main subject; NOT thick, NOT heavy, NOT marker (keep this thin line style). "
-    "Palette, flat fills only: lush tropical greens from fresh yellow-green to deep banana-leaf green, dark rich "
+    "Palette, flat fills only: lush tropical greens from fresh yellow-green to deep forest green, dark rich "
     "soil brown, warm terracotta, straw-tan, soft cream, and a pale peach-to-blue dawn sky — warm and alive, "
     "richer than pale pastel but never neon, never harsh. "
     "Reserve ONE accent color: deep warm AMBER-GOLD, used only for the sun and the dawn glow — always the single "
