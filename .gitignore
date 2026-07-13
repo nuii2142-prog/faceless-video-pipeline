@@ -27,6 +27,10 @@ farm view Ref/
 *.mp4
 SFX/
 
+# ── channel-standard music (Hook/Main Theme/Main C/Main D/Outro) — this IS the
+# pipeline (reused on every video), not per-video output; exception to *.wav above
+!Music/*.wav
+
 # ── per-video outputs: the channel's content, not the pipeline ──
 output/
 Test voice/

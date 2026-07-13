@@ -22,6 +22,14 @@ gold digits. Content nouns in an every-frame block WILL appear in every frame.
 | **Hat = story prop** | The conical farmer hat is NOT always on. It appears in farmer beats (waking as himself, returning to the soil, parents, lifting it, home) and comes OFF during the city/chasing-money beats (leaving the farm, direct-sales, trading, "I was ordinary", night rest). | The hat leaving and returning tracks his identity arc — a detail viewers feel without naming. Also fixes "hat on every frame" monotony. |
 | **Horizon** | Farm wide shots end in **low forested hills** (the real valley) or a wall of trees — NEVER a city skyline. A city skyline appears ONLY in city/contrast beats, where it IS the point. | Kills the odd "Bangkok behind the paddies" clash; hills become a recognizable backdrop. |
 
+> **⭐ Nuay-approved exemplar frames (2026-07-13):** `the-five-minute-commute`
+> `frames_graded/scene_159.png` and `scene_147.png` — dusk/evening warm tone, bamboo A-frame
+> trellis + banana/coconut palms + a dirt path toward low hills, thin lines but noticeably MORE
+> detail than the average frame, colors kept muted/desaturated rather than vivid. Nuay's own words:
+> "looks like the real atmosphere of my house." When a wide farm/path establishing shot calls for
+> extra polish (an episode's final beat, a thumbnail candidate), use these two as the reference to
+> match rather than the average beat's simpler treatment.
+
 ### 📍 Location menu (from `farm view Ref/` + Nuay's own photos in `output/*/My farm/` — pick per
 beat, match the meaning. Elements below marked "(real, 2026-07-13)" are confirmed from his actual
 photos and render-tested well — use them as the channel's recognizable signature, not generic farm cues.
@@ -162,6 +170,16 @@ when the caption is a statistic. Symbols (`?`, `=`, `X`, `%`, arrow) render fine
   2026-07-13). Fixed to "deep forest green" — a color word with no concrete-object prior. Lesson:
   in BASE_STYLE, avoid ANY plant/object noun even as a color reference ("sky-blue" is fine,
   "banana-leaf-green" is not) — describing colors is safe, naming things is not.
+- **"No plant/no leaf" negation in a per-beat `visual` prompt is unreliable — this is a distilled
+  cfg-1 turbo model, it doesn't reason about negation the way a full-CFG model does.** Confirmed
+  2026-07-13 re-rolling `the-five-minute-commute` scenes 3/21/52/55/81/107/142 (indoor beats that
+  had leaked a corner plant): appending "no plants, no leaves, no foliage" to the visual text alone
+  did NOT remove it reliably. What worked: replace the vague "plain background" with a CONCRETE
+  positive description of what IS there instead — "solid flat pale cream WALL" instead of "plain
+  background" — which gives the model something to paint other than its default filler. Even then,
+  some indoor beats still showed background greenery through a window/doorway; that's acceptable
+  (it's now context-justified scenery glimpsed outside, not a foreground potted-plant intrusion) —
+  don't chase it further than one positive-description re-roll.
 - **Any draw-instruction in BASE_STYLE fires on EVERY frame** (cfg 1 = no conditionals). Both
   "amber-gold for…numbers" (accent sentence) and "for a statistic beat, draw the number LARGE…"
   (a 'conditional' sentence) stamped a random gold digit on nearly every test frame (2026-07-09,

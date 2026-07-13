@@ -403,12 +403,36 @@ assemble     → python scripts\assemble_clip.py <slug> --frames-dir frames_grad
 `--ken-burns` renders scenes in parallel (`--jobs`, default ~6) — a long clip takes minutes, not
 an hour. Run it in the background and report the printed ETA.
 
-**Music: default = NONE (2026-07-13).** Ship voice-only unless Nuay explicitly asks for a bed —
-across `the-five-minute-commute` he walked it back 7%→5%→3%→off; the calm/mindfulness register this
-channel is built on reads better as pure narration, and silence removes a Content-ID surface
-entirely. If a video's content specifically calls for a bed, generate with `scripts/gen_music.py
-<out.mp3>` (ACE-Step workflow, melody-free ambient pad, `--seconds/--seed/--bpm/--tags`) and pass
-`--music SFX\track.mp3 --music-vol 0.03` to `assemble_clip.py` — but ask first rather than defaulting it in.
+**Music: CHANNEL BLEND at 3% (2026-07-13, revised — supersedes the earlier "default NONE").**
+Nuay generated a locked 5-track channel signature on ElevenLabs Music v2 (instrumental, guitar +
+kalimba = "soil", faint synth sparkle = "signal"). They live in `Music/` at repo root (one canonical
+file per role — regenerate via `Music/PROMPTS.md`, verify low-band % before replacing any of these):
+- `Music/Hook.wav` — ~86 BPM, energetic (opens the video, first ~30-40s)
+- `Music/Main Theme.wav` — ~76 BPM, calm bed/anchor — used for short-form AND long-form pillar 1
+- `Music/Main C.wav` — brighter, kalimba-led — long-form pillar 2 (curious/creative content)
+- `Music/Main D.wav` — warm pad, more reflective — long-form pillar 3 (closing/rumination content)
+- `Music/Outro.wav` — the closing sign-off sting (the last ~10-12s)
+All tuned so the low band (60-250 Hz) stays near Nuay's own voice (21-36% vs his 23%) — so they DON'T
+muddy his deep voice. Verify any new channel track the same way (librosa low-band %) before shipping it.
+
+**Short-form blend** (approved on `the-five-minute-commute-short`): Hook at **3%** for the first 30s
+→ 3s crossfade → Main Theme bed at **3%** (self-crossfade loop to cover the length) → Main Theme fades
+out ~7s before the end as Outro swells in at **~12%** (louder on purpose — it's the recognizable
+button, and the voice has ended by then so nothing clashes). Whole mix re-loudnorm'd to -14 LUFS.
+
+**Long-form blend** (~8:25 runtime, one Main variant per pillar so the bed never loops the same 60s
+for minutes — map to `seo_youtube.md` chapters): Hook 3% (0:00-0:43) → Main Theme 3% (0:43-3:39,
+pillar 1) → Main C 3% (3:39-5:24, pillar 2) → Main D 3% (5:24-8:17, pillar 3) → Outro ~12% (8:17-end).
+4s crossfades at pillar boundaries.
+
+`assemble_clip.py`'s single-track `--music` can't do a multi-part blend — mix it as a post step with
+ffmpeg (extract the graded voice+fx from `final.mp4`, layer tracks on a canvas of the video's duration
+with `adelay`/`afade`/`volume`, `amix ...:normalize=0`, then loudnorm), then mux onto the graded
+`final.mp4` as `final_music.mp4`. Keep `final.mp4` as the clean voice-only master. If the long-form
+frames are already graded, this is audio-only — no re-render needed for the music.
+For a quick voice-only-plus-simple-bed case, `--music "Music\Main Theme.wav" --music-vol 0.03` still works.
+⚠️ **ElevenLabs Music is NOT the YouTube Audio Library** — confirm the plan's commercial/monetization
+license covers publishing, and that the tracks carry no Content-ID claim, before shipping on a monetized upload.
 
 ## B6 — Before upload
 Run `docs/publish-checklist.md` against the ep and report what's missing. Do not skip the last
