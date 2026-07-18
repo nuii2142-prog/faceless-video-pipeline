@@ -139,7 +139,14 @@ Wire into the workflow's negative-text node when using a cfg>1 model.
 
 - **CHARACTER** — the figure does the one action the caption names. Gets `CHARACTER_STYLE`. Use "the character".
 - **B-ROLL** — an object / icon / chart / a short NUMBER (e.g. `58`, `40%`). No person → no `CHARACTER_STYLE`.
-- **ATMOSPHERE** — a place / landscape. Pure place = "no people"; a person-in-the-scene = "one small figure" (stays generic, not the full spec, since it is small/distant).
+- **ATMOSPHERE** — a place / landscape. Pure place = "no people". A person-in-the-scene = "one small figure" (stays generic, not the full spec) is ONLY for OTHER people (a crowd, family, a stranger, the teacher) — NEVER the main character.
+
+> ⚠️ **The main character is ALWAYS `shot_type: "CHARACTER"`, every single time he appears** — even
+> small, distant, from behind, or standing in a wide landscape. Mark him CHARACTER so he renders as the
+> consistent chubby doodle (round white head, hat when outdoors), never a faceless generic ATMOSPHERE
+> blob. Reserve the generic "one small figure" ONLY for people who are NOT him. (Locked 2026-07-18 —
+> Nuay: don't let the main character's identity slip. An ATMOSPHERE beat that used to leak a blank
+> white blob where HE should be must be rewritten as a CHARACTER beat.)
 
 There are NO quotas — the mix emerges from what each line means (the method lives in
 `skills/script-breakdown/SKILL.md` B3). Keep each visual to ONE clear idea, staged as simply as it
