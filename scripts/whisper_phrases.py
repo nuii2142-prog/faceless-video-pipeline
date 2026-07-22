@@ -54,22 +54,36 @@ def segment(words: list[dict]) -> list[list[dict]]:
         else:
             merged.append(g)
 
-    # 3) split too-long groups at their single largest internal gap
+    # 3) split too-long groups, RECURSIVELY, until every piece fits MAX_DUR.
+    # A single split pass left long continuous-speech runs (no internal pause >0.6s
+    # to trigger a primary cut, and only one split allowed) still oversized — e.g. a
+    # 16.8s "phrase" on real audio (the-wandering-mind, 2026-07-17). Split_long()
+    # recurses, and falls back to a time-midpoint cut when no natural gap exists,
+    # so continuous delivery still gets capped instead of passing through untouched.
     final = []
     for g in merged:
-        d = g[-1]["end"] - g[0]["start"]
-        if d > MAX_DUR and len(g) > 3:
-            k_best, gap_best = None, 0.0
-            for k in range(len(g) - 1):
-                gp = g[k + 1]["start"] - g[k]["end"]
-                if gp > gap_best:
-                    gap_best, k_best = gp, k
-            if k_best is not None and gap_best > 0.12:
-                final.append(g[:k_best + 1])
-                final.append(g[k_best + 1:])
-                continue
-        final.append(g)
+        final.extend(split_long(g))
     return final
+
+
+def split_long(g: list[dict]) -> list[dict]:
+    d = g[-1]["end"] - g[0]["start"]
+    if d <= MAX_DUR or len(g) <= 1:
+        return [g]
+    k_best, gap_best = None, 0.0
+    for k in range(len(g) - 1):
+        gp = g[k + 1]["start"] - g[k]["end"]
+        if gp > gap_best:
+            gap_best, k_best = gp, k
+    if k_best is None or gap_best <= 0.12:
+        # no natural pause big enough -> cut nearest the time midpoint instead of
+        # leaving the whole run unsplit
+        target = (g[0]["start"] + g[-1]["end"]) / 2
+        k_best = min(range(len(g) - 1), key=lambda k: abs(g[k]["end"] - target))
+    left, right = g[:k_best + 1], g[k_best + 1:]
+    if not left or not right:
+        return [g]
+    return split_long(left) + split_long(right)
 
 
 def transcribe(audio_path: str, slug: str):

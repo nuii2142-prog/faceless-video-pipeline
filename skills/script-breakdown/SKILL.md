@@ -370,7 +370,9 @@ least confident about (phrase + visual). **Wait for his OK before generating** �
 ## B4 — Breathing room (intro / outro) — automatic in assembly
 These come from `assemble_clip.py`; do NOT time them in scenes.json:
 - **Lead-in ~1s** — frame 1 holds before the voice starts (the viewer settles in).
-- **Outro ~2.5s** — a final frame holds after the voice ends (let it land).
+- **Outro ~6s** (was 2.5s, bumped 2026-07-18) — a final frame holds after the voice ends. Sized to
+  give the channel-music outro swell (B5) a real voice-free 6 seconds to hold its ~20% peak in — the
+  old 2.5s wasn't enough room and made the swell feel like it "disappeared."
 - **Fade** — the voice eases in/out; the video fades to black at the very end only (the lead-in
   hold does the settling at the start — there is no fade-from-black).
 Optionally author ONE dedicated **outro visual** (a calm resolution image — e.g. the figure
@@ -403,7 +405,9 @@ assemble     → python scripts\assemble_clip.py <slug> --frames-dir frames_grad
 `--ken-burns` renders scenes in parallel (`--jobs`, default ~6) — a long clip takes minutes, not
 an hour. Run it in the background and report the printed ETA.
 
-**Music: CHANNEL BLEND at 3% (2026-07-13, revised — supersedes the earlier "default NONE").**
+**Music: CHANNEL BLEND at 4% base (2026-07-13, revised — supersedes the earlier "default NONE";
+base level corrected to 4% on 2026-07-16, see opening-swell note below — this file had drifted out
+of sync with that update, fixed 2026-07-18).**
 Nuay generated a locked 5-track channel signature on ElevenLabs Music v2 (instrumental, guitar +
 kalimba = "soil", faint synth sparkle = "signal"). They live in `Music/` at repo root (one canonical
 file per role — regenerate via `Music/PROMPTS.md`, verify low-band % before replacing any of these):
@@ -411,19 +415,44 @@ file per role — regenerate via `Music/PROMPTS.md`, verify low-band % before re
 - `Music/Main Theme.wav` — ~76 BPM, calm bed/anchor — used for short-form AND long-form pillar 1
 - `Music/Main C.wav` — brighter, kalimba-led — long-form pillar 2 (curious/creative content)
 - `Music/Main D.wav` — warm pad, more reflective — long-form pillar 3 (closing/rumination content)
-- `Music/Outro.wav` — the closing sign-off sting (the last ~10-12s)
+- `Music/Outro.wav` — the closing sign-off sting, exactly **12s long** (use the whole file, no loop needed)
 All tuned so the low band (60-250 Hz) stays near Nuay's own voice (21-36% vs his 23%) — so they DON'T
 muddy his deep voice. Verify any new channel track the same way (librosa low-band %) before shipping it.
 
-**Short-form blend** (approved on `the-five-minute-commute-short`): Hook at **3%** for the first 30s
-→ 3s crossfade → Main Theme bed at **3%** (self-crossfade loop to cover the length) → Main Theme fades
-out ~7s before the end as Outro swells in at **~12%** (louder on purpose — it's the recognizable
-button, and the voice has ended by then so nothing clashes). Whole mix re-loudnorm'd to -14 LUFS.
+**Opening swell + base level, LOCKED default (confirmed 2026-07-16 on `the-trust-economy`):** the
+Hook track opens at **13%** for the first 1s, then fades down to a **4% steady bed** over the next
+2.5s (settled by ~3.5s in), holding at 4% from there through the rest of the video (all four bed
+tracks — Hook/Main Theme/Main C/Main D — run at 4%, not the earlier flat 3%; Nuay found 3% too quiet
+against the voice). Build the swell as two summed layers on the Hook track: a flat 4%-volume copy
+for the whole span, plus a second copy at 9% that holds for the first 1s then fades out over the next
+2.5s down to 0 — summing gives the 13%→4% curve (ffmpeg's `afade` only fades to/from zero, so a
+fade-between-two-nonzero-levels needs this two-layer sum trick). **The voice track gets NO fade-in of
+its own** — constant volume from the start; the "emerging" feel comes entirely from the music
+receding around it.
+
+**Outro swell — STANDARD (revised 2026-07-18, applies to every clip from here on):** the old ~12%
+swell in the last ~7s read as too quiet and too short — Nuay's words: "ของเก่าเหมือนหายไป และสั้นไป"
+(the old one seemed to vanish, and was too short). New default, sized to the Outro track's own real
+12s length so nothing needs to be looped or fabricated: Main bed starts fading out at **12s before
+the end**; over the FIRST 6s of that window the Outro track crossfades in (bed fades toward 0, Outro
+rises toward its peak); over the LAST 6s (the true final 6 seconds) **Outro holds at ~20%** — louder
+than the old 12%, and sustained through the true ending instead of a quick fade-through. This is the
+standard now — don't revert to the old 12%/~7s figures without Nuay asking again.
+
+**Short-form blend** (base pattern approved on `the-five-minute-commute-short`, base level + outro
+swell updated per the standards above): Hook opens 13%→4% over the first 3.5s (per the opening-swell
+recipe) → holds at **4%** → 3s crossfade → Main Theme bed at **4%** (self-crossfade loop to cover the
+length) → 12s before the end, Main Theme fades out over 6s as Outro crossfades in, then Outro holds at
+**~20%** for the final 6 seconds (the voice has ended by then so nothing clashes). Whole mix
+re-loudnorm'd to -14 LUFS.
 
 **Long-form blend** (~8:25 runtime, one Main variant per pillar so the bed never loops the same 60s
-for minutes — map to `seo_youtube.md` chapters): Hook 3% (0:00-0:43) → Main Theme 3% (0:43-3:39,
-pillar 1) → Main C 3% (3:39-5:24, pillar 2) → Main D 3% (5:24-8:17, pillar 3) → Outro ~12% (8:17-end).
-4s crossfades at pillar boundaries.
+for minutes — map to `seo_youtube.md` chapters): Hook 13%→4% swell then **4%** (0:00-0:43) → Main
+Theme 4% (0:43-3:39, pillar 1) → Main C 4% (3:39-5:24, pillar 2) → Main D 4% (5:24 to 12s-before-end,
+pillar 3 + close) → 6s crossfade from Main D down to Outro rising up → Outro holds at **~20% for the
+final 6 seconds** (8:25 example: crossfade 8:13-8:19, hold 8:19-8:25). 4s crossfades at the earlier
+pillar boundaries (Hook→Theme, Theme→C, C→D); the final Main D→Outro handoff uses the 6s crossfade
+described above instead, since it's sized to the Outro asset, not an arbitrary 4s.
 
 `assemble_clip.py`'s single-track `--music` can't do a multi-part blend — mix it as a post step with
 ffmpeg (extract the graded voice+fx from `final.mp4`, layer tracks on a canvas of the video's duration
@@ -434,9 +463,38 @@ For a quick voice-only-plus-simple-bed case, `--music "Music\Main Theme.wav" --m
 ⚠️ **ElevenLabs Music is NOT the YouTube Audio Library** — confirm the plan's commercial/monetization
 license covers publishing, and that the tracks carry no Content-ID claim, before shipping on a monetized upload.
 
+## B5b — Post-production polish notes (Nuii's DaVinci pass) — list these in every clip's handoff
+Nuii does burn-in captions + final polish in DaVinci, not via ffmpeg ([[feedback-davinci-editing]]),
+so these are notes TO him, not pipeline automation. Adopted 2026-07-18 from a Gemini review of
+`the-wandering-mind-short` — the two durable, always-worth-it moves (the review's data-mapped
+"retention drops at NN:NN" claims were cross-video timestamp coincidences, NOT this clip's analytics,
+and were NOT adopted — verify retention on the clip's OWN Studio graph before trusting any such claim):
+- **Foreign/Pali term + key-word text overlays.** The image model can't render words (only standalone
+  numbers), so a term like "sampajañña / clear knowing" or a stat's *label* never appears on screen.
+  Add it as a short post overlay (2-4s) on the beat that speaks it, same warm palette — reinforces
+  authority + comprehension for words Whisper mishears and viewers miss. (Stat *numbers* already
+  render in-frame on the stat beat — don't double them.)
+- **Section-boundary cross-dissolves.** `assemble_clip.py` hard-cuts every beat. At the 2-3 real
+  section turns only (hook→body, body→close) a ~0.5s cross-dissolve reads smoother; keep hard cuts
+  INSIDE a section (a cut = emphasis, per B2).
+- Frames already get Ken Burns (`--ken-burns`) so object/still beats DO move — if one full-frame
+  object beat still feels static, bump that beat's zoom in DaVinci; it isn't actually frozen.
+Judgment-call moves NOT made default (offer per clip, don't bake in): a 2s cold-open flash of the
+tension image before the atmosphere hook (only A/B it — it trades against a chosen atmosphere hook),
+and an end CTA (prefer a YouTube end-screen element over an on-image text card — a text card fights
+the quiet brand).
+
 ## B6 — Before upload
 Run `docs/publish-checklist.md` against the ep and report what's missing. Do not skip the last
 item (sleep guardrail) — late is better than scattered.
+
+**Thai subtitle sidecar (added 2026-07-16, every video from here on — short AND long):** after
+`make_srt.py` writes the English `<slug>.srt`, translate it into `<slug>.th.srt` — same cue count,
+same timestamps, but translate for MEANING per cue (natural Thai phrasing a Thai viewer would
+actually say), not a literal word-for-word pass. Upload it as a second subtitle track in YouTube
+Studio (this repo's other distribution targets — Shorts/FB/IG/TikTok cutdowns — can't carry a
+second subtitle track, so Thai captions are YouTube-only, same platform-scope logic as the
+long-form-only English SEO pass below).
 
 **Platform scope by length_mode (2026-07-13) — check `script.json` before writing any SEO copy:**
 - **`length_mode: "long"` → YouTube only.** Write title/description/tags/chapters. Do NOT write

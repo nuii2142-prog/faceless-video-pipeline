@@ -64,8 +64,7 @@ CHARACTER_STYLE = (
     "wide; the thin eyebrows tilt with worry or lift with wonder; the small mouth can smile, fall flat, or open "
     "slightly. "
     "Always the same big round head, same small soft rounded body, same medium clean line. "
-    "(The farmer hat is NOT part of the character — it is added only by scenes that ask for it, so he is "
-    "bareheaded here by default.)"
+    "The top of his big round white head is smooth, clean and fully visible."
 )
 
 # Negative prompt — INERT on cfg-1 turbo models (z-turbo) but ACTIVE on real-cfg models

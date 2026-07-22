@@ -42,7 +42,9 @@ MUSIC_VOL = 0.07   # background music level under the voice (~7%) — soft bed, 
 # before loudnorm is the upgrade path if that last half-LU ever matters.
 LOUDNORM = "loudnorm=I=-14:TP=-1:LRA=11"
 LEAD_IN = 1.0      # seconds of frame-1 hold before the voice (pre-roll breath)
-OUTRO = 2.5        # seconds of hold after the voice (post-roll settle)
+OUTRO = 6.0        # seconds of hold after the voice (post-roll settle). Was 2.5s; bumped 2026-07-18
+                   # so the channel-music outro swell (SKILL.md B5) has a real voice-free 6s to hold
+                   # its ~20% peak in — 2.5s wasn't enough room and made the swell "disappear".
 FADE_OUT = 1.0     # video fade to black at the very end (inside the OUTRO window)
 AFADE_IN = 0.35    # ease the voice in so it doesn't start abruptly
 AFADE_OUT = 0.6    # ease the voice out so it doesn't cut abruptly
